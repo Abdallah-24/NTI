@@ -1,0 +1,2 @@
+../Src/SSD_prg.c:17:6:H_SSD_voidinit	8	static
+../Src/SSD_prg.c:36:6:H_SSD_voiddisplayNumber	24	static
