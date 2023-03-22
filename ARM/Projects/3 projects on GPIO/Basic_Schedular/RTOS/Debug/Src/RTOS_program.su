@@ -1,6 +1,0 @@
-../Src/RTOS_program.c:16:6:RTOS_voidInit	8	static
-../Src/RTOS_program.c:24:6:RTOS_voidCreatTask	24	static
-../Src/RTOS_program.c:34:6:RTOS_voidSuspendTask	16	static
-../Src/RTOS_program.c:41:6:RTOS_voidResumeTask	16	static
-../Src/RTOS_program.c:48:6:RTOS_voidDeleteTask	16	static
-../Src/RTOS_program.c:92:13:RTOS_voidScheduler	16	static
