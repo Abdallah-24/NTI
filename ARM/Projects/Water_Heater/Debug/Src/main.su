@@ -1,0 +1,5 @@
+../Src/main.c:48:6:SwitchOnOff	4	static
+../Src/main.c:59:6:TEMP_UP	4	static
+../Src/main.c:70:6:TEMP_DOWN	4	static
+../Src/main.c:81:6:ACTION	4	static
+../Src/main.c:95:5:main	64	static

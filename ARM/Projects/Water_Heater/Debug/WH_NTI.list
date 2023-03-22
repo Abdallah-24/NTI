@@ -1,0 +1,3231 @@
+
+WH_NTI.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000130  08000000  08000000  00010000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         000014a8  08000130  08000130  00010130  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000018  080015d8  080015d8  000115d8  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  080015f0  080015f0  00020004  2**0
+                  CONTENTS
+  4 .ARM          00000000  080015f0  080015f0  00020004  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  080015f0  080015f0  00020004  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  080015f0  080015f0  000115f0  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .fini_array   00000004  080015f4  080015f4  000115f4  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  8 .data         00000004  20000000  080015f8  00020000  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          0000006c  20000004  080015fc  00020004  2**2
+                  ALLOC
+ 10 ._user_heap_stack 00000600  20000070  080015fc  00020070  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000029  00000000  00000000  00020004  2**0
+                  CONTENTS, READONLY
+ 12 .debug_info   0000150e  00000000  00000000  0002002d  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 13 .debug_abbrev 000008b5  00000000  00000000  0002153b  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_aranges 00000298  00000000  00000000  00021df0  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_ranges 000001f0  00000000  00000000  00022088  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_macro  0000118c  00000000  00000000  00022278  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_line   0000114f  00000000  00000000  00023404  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_str    00004550  00000000  00000000  00024553  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .comment      00000050  00000000  00000000  00028aa3  2**0
+                  CONTENTS, READONLY
+ 20 .debug_frame  0000076c  00000000  00000000  00028af4  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+08000130 <__do_global_dtors_aux>:
+ 8000130:	b510      	push	{r4, lr}
+ 8000132:	4c05      	ldr	r4, [pc, #20]	; (8000148 <__do_global_dtors_aux+0x18>)
+ 8000134:	7823      	ldrb	r3, [r4, #0]
+ 8000136:	b933      	cbnz	r3, 8000146 <__do_global_dtors_aux+0x16>
+ 8000138:	4b04      	ldr	r3, [pc, #16]	; (800014c <__do_global_dtors_aux+0x1c>)
+ 800013a:	b113      	cbz	r3, 8000142 <__do_global_dtors_aux+0x12>
+ 800013c:	4804      	ldr	r0, [pc, #16]	; (8000150 <__do_global_dtors_aux+0x20>)
+ 800013e:	f3af 8000 	nop.w
+ 8000142:	2301      	movs	r3, #1
+ 8000144:	7023      	strb	r3, [r4, #0]
+ 8000146:	bd10      	pop	{r4, pc}
+ 8000148:	20000004 	.word	0x20000004
+ 800014c:	00000000 	.word	0x00000000
+ 8000150:	080015c0 	.word	0x080015c0
+
+08000154 <frame_dummy>:
+ 8000154:	b508      	push	{r3, lr}
+ 8000156:	4b03      	ldr	r3, [pc, #12]	; (8000164 <frame_dummy+0x10>)
+ 8000158:	b11b      	cbz	r3, 8000162 <frame_dummy+0xe>
+ 800015a:	4903      	ldr	r1, [pc, #12]	; (8000168 <frame_dummy+0x14>)
+ 800015c:	4803      	ldr	r0, [pc, #12]	; (800016c <frame_dummy+0x18>)
+ 800015e:	f3af 8000 	nop.w
+ 8000162:	bd08      	pop	{r3, pc}
+ 8000164:	00000000 	.word	0x00000000
+ 8000168:	20000008 	.word	0x20000008
+ 800016c:	080015c0 	.word	0x080015c0
+
+08000170 <_delay_ms>:
+#include	"ADC_config.h"
+#include	"ADC_int.h"
+
+	/******************* Functions Definition ********************/
+void	_delay_ms(u32 _ms)
+{
+ 8000170:	b480      	push	{r7}
+ 8000172:	b085      	sub	sp, #20
+ 8000174:	af00      	add	r7, sp, #0
+ 8000176:	6078      	str	r0, [r7, #4]
+	for(u32 i = 0; i < (_ms * 500) ; i++)
+ 8000178:	2300      	movs	r3, #0
+ 800017a:	60fb      	str	r3, [r7, #12]
+ 800017c:	e003      	b.n	8000186 <_delay_ms+0x16>
+	{
+		asm("NOP");
+ 800017e:	bf00      	nop
+	for(u32 i = 0; i < (_ms * 500) ; i++)
+ 8000180:	68fb      	ldr	r3, [r7, #12]
+ 8000182:	3301      	adds	r3, #1
+ 8000184:	60fb      	str	r3, [r7, #12]
+ 8000186:	687b      	ldr	r3, [r7, #4]
+ 8000188:	f44f 72fa 	mov.w	r2, #500	; 0x1f4
+ 800018c:	fb02 f303 	mul.w	r3, r2, r3
+ 8000190:	68fa      	ldr	r2, [r7, #12]
+ 8000192:	429a      	cmp	r2, r3
+ 8000194:	d3f3      	bcc.n	800017e <_delay_ms+0xe>
+	}
+}
+ 8000196:	bf00      	nop
+ 8000198:	bf00      	nop
+ 800019a:	3714      	adds	r7, #20
+ 800019c:	46bd      	mov	sp, r7
+ 800019e:	bc80      	pop	{r7}
+ 80001a0:	4770      	bx	lr
+	...
+
+080001a4 <ADC_void_init>:
+void	ADC_void_init	(void)
+{
+ 80001a4:	b580      	push	{r7, lr}
+ 80001a6:	af00      	add	r7, sp, #0
+	// ON ADC -> ADON -> 1
+	SET_BIT(ADC->CR2 , 0);
+ 80001a8:	4b1e      	ldr	r3, [pc, #120]	; (8000224 <ADC_void_init+0x80>)
+ 80001aa:	689b      	ldr	r3, [r3, #8]
+ 80001ac:	4a1d      	ldr	r2, [pc, #116]	; (8000224 <ADC_void_init+0x80>)
+ 80001ae:	f043 0301 	orr.w	r3, r3, #1
+ 80001b2:	6093      	str	r3, [r2, #8]
+	_delay_ms(20);
+ 80001b4:	2014      	movs	r0, #20
+ 80001b6:	f7ff ffdb 	bl	8000170 <_delay_ms>
+
+	// Set External event select for regular group -> SWSTART -> 111
+	SET_BIT(ADC->CR2 , 19);
+ 80001ba:	4b1a      	ldr	r3, [pc, #104]	; (8000224 <ADC_void_init+0x80>)
+ 80001bc:	689b      	ldr	r3, [r3, #8]
+ 80001be:	4a19      	ldr	r2, [pc, #100]	; (8000224 <ADC_void_init+0x80>)
+ 80001c0:	f443 2300 	orr.w	r3, r3, #524288	; 0x80000
+ 80001c4:	6093      	str	r3, [r2, #8]
+	SET_BIT(ADC->CR2 , 17);
+ 80001c6:	4b17      	ldr	r3, [pc, #92]	; (8000224 <ADC_void_init+0x80>)
+ 80001c8:	689b      	ldr	r3, [r3, #8]
+ 80001ca:	4a16      	ldr	r2, [pc, #88]	; (8000224 <ADC_void_init+0x80>)
+ 80001cc:	f443 3300 	orr.w	r3, r3, #131072	; 0x20000
+ 80001d0:	6093      	str	r3, [r2, #8]
+	SET_BIT(ADC->CR2 , 18);
+ 80001d2:	4b14      	ldr	r3, [pc, #80]	; (8000224 <ADC_void_init+0x80>)
+ 80001d4:	689b      	ldr	r3, [r3, #8]
+ 80001d6:	4a13      	ldr	r2, [pc, #76]	; (8000224 <ADC_void_init+0x80>)
+ 80001d8:	f443 2380 	orr.w	r3, r3, #262144	; 0x40000
+ 80001dc:	6093      	str	r3, [r2, #8]
+
+	SET_BIT(ADC->CR2 , 20);
+ 80001de:	4b11      	ldr	r3, [pc, #68]	; (8000224 <ADC_void_init+0x80>)
+ 80001e0:	689b      	ldr	r3, [r3, #8]
+ 80001e2:	4a10      	ldr	r2, [pc, #64]	; (8000224 <ADC_void_init+0x80>)
+ 80001e4:	f443 1380 	orr.w	r3, r3, #1048576	; 0x100000
+ 80001e8:	6093      	str	r3, [r2, #8]
+//	SET_BIT(ADC->CR1 , 11);
+	// Set  Data alignment -> Right Alignment -> ALIGN > 0
+	CLR_BIT(ADC->CR2 , 11);
+ 80001ea:	4b0e      	ldr	r3, [pc, #56]	; (8000224 <ADC_void_init+0x80>)
+ 80001ec:	689b      	ldr	r3, [r3, #8]
+ 80001ee:	4a0d      	ldr	r2, [pc, #52]	; (8000224 <ADC_void_init+0x80>)
+ 80001f0:	f423 6300 	bic.w	r3, r3, #2048	; 0x800
+ 80001f4:	6093      	str	r3, [r2, #8]
+	// Set Single conversion mode -> CONT -> 0
+	CLR_BIT(ADC->CR2 , 1);
+ 80001f6:	4b0b      	ldr	r3, [pc, #44]	; (8000224 <ADC_void_init+0x80>)
+ 80001f8:	689b      	ldr	r3, [r3, #8]
+ 80001fa:	4a0a      	ldr	r2, [pc, #40]	; (8000224 <ADC_void_init+0x80>)
+ 80001fc:	f023 0302 	bic.w	r3, r3, #2
+ 8000200:	6093      	str	r3, [r2, #8]
+
+	// Set Number of Conversion in Regular Mode -> Default -> 1
+
+
+	// Start Calibration -> CAL -> 1
+	SET_BIT(ADC->CR2 , 2);
+ 8000202:	4b08      	ldr	r3, [pc, #32]	; (8000224 <ADC_void_init+0x80>)
+ 8000204:	689b      	ldr	r3, [r3, #8]
+ 8000206:	4a07      	ldr	r2, [pc, #28]	; (8000224 <ADC_void_init+0x80>)
+ 8000208:	f043 0304 	orr.w	r3, r3, #4
+ 800020c:	6093      	str	r3, [r2, #8]
+	while(GET_BIT(ADC->CR2 , 2) != 0);
+ 800020e:	bf00      	nop
+ 8000210:	4b04      	ldr	r3, [pc, #16]	; (8000224 <ADC_void_init+0x80>)
+ 8000212:	689b      	ldr	r3, [r3, #8]
+ 8000214:	089b      	lsrs	r3, r3, #2
+ 8000216:	f003 0301 	and.w	r3, r3, #1
+ 800021a:	2b00      	cmp	r3, #0
+ 800021c:	d1f8      	bne.n	8000210 <ADC_void_init+0x6c>
+
+}
+ 800021e:	bf00      	nop
+ 8000220:	bf00      	nop
+ 8000222:	bd80      	pop	{r7, pc}
+ 8000224:	40012400 	.word	0x40012400
+
+08000228 <ADC_u16_read>:
+u16		ADC_u16_read	(Channel_ID Copy_enuChannel)
+{
+ 8000228:	b480      	push	{r7}
+ 800022a:	b083      	sub	sp, #12
+ 800022c:	af00      	add	r7, sp, #0
+ 800022e:	4603      	mov	r3, r0
+ 8000230:	71fb      	strb	r3, [r7, #7]
+//	u32 Local_u32Reading;
+//	ADC->DR &= 0x00000000;
+	// Set Channel
+	if(Copy_enuChannel <= CHANNEL_9)
+ 8000232:	79fb      	ldrb	r3, [r7, #7]
+ 8000234:	2b09      	cmp	r3, #9
+ 8000236:	d81d      	bhi.n	8000274 <ADC_u16_read+0x4c>
+	{
+
+		//ADC->SQR3 &= 0xfffffff0; // Clear 0 -> 4 bits
+		//ADC->SQR3 |= Copy_enuChannel;
+		CLR_BIT(ADC->SQR3 , 0);
+ 8000238:	4b1d      	ldr	r3, [pc, #116]	; (80002b0 <ADC_u16_read+0x88>)
+ 800023a:	6b5b      	ldr	r3, [r3, #52]	; 0x34
+ 800023c:	4a1c      	ldr	r2, [pc, #112]	; (80002b0 <ADC_u16_read+0x88>)
+ 800023e:	f023 0301 	bic.w	r3, r3, #1
+ 8000242:	6353      	str	r3, [r2, #52]	; 0x34
+		CLR_BIT(ADC->SQR3 , 1);
+ 8000244:	4b1a      	ldr	r3, [pc, #104]	; (80002b0 <ADC_u16_read+0x88>)
+ 8000246:	6b5b      	ldr	r3, [r3, #52]	; 0x34
+ 8000248:	4a19      	ldr	r2, [pc, #100]	; (80002b0 <ADC_u16_read+0x88>)
+ 800024a:	f023 0302 	bic.w	r3, r3, #2
+ 800024e:	6353      	str	r3, [r2, #52]	; 0x34
+		CLR_BIT(ADC->SQR3 , 2);
+ 8000250:	4b17      	ldr	r3, [pc, #92]	; (80002b0 <ADC_u16_read+0x88>)
+ 8000252:	6b5b      	ldr	r3, [r3, #52]	; 0x34
+ 8000254:	4a16      	ldr	r2, [pc, #88]	; (80002b0 <ADC_u16_read+0x88>)
+ 8000256:	f023 0304 	bic.w	r3, r3, #4
+ 800025a:	6353      	str	r3, [r2, #52]	; 0x34
+		CLR_BIT(ADC->SQR3 , 3);
+ 800025c:	4b14      	ldr	r3, [pc, #80]	; (80002b0 <ADC_u16_read+0x88>)
+ 800025e:	6b5b      	ldr	r3, [r3, #52]	; 0x34
+ 8000260:	4a13      	ldr	r2, [pc, #76]	; (80002b0 <ADC_u16_read+0x88>)
+ 8000262:	f023 0308 	bic.w	r3, r3, #8
+ 8000266:	6353      	str	r3, [r2, #52]	; 0x34
+		CLR_BIT(ADC->SQR3 , 4);
+ 8000268:	4b11      	ldr	r3, [pc, #68]	; (80002b0 <ADC_u16_read+0x88>)
+ 800026a:	6b5b      	ldr	r3, [r3, #52]	; 0x34
+ 800026c:	4a10      	ldr	r2, [pc, #64]	; (80002b0 <ADC_u16_read+0x88>)
+ 800026e:	f023 0310 	bic.w	r3, r3, #16
+ 8000272:	6353      	str	r3, [r2, #52]	; 0x34
+
+	}
+	// Set Single conversion mode -> CONT -> 0
+	CLR_BIT(ADC->CR2 , 1);
+ 8000274:	4b0e      	ldr	r3, [pc, #56]	; (80002b0 <ADC_u16_read+0x88>)
+ 8000276:	689b      	ldr	r3, [r3, #8]
+ 8000278:	4a0d      	ldr	r2, [pc, #52]	; (80002b0 <ADC_u16_read+0x88>)
+ 800027a:	f023 0302 	bic.w	r3, r3, #2
+ 800027e:	6093      	str	r3, [r2, #8]
+	// Start conversion of regular channels -> SWSTART -> 1
+	SET_BIT(ADC->CR2 , 22);
+ 8000280:	4b0b      	ldr	r3, [pc, #44]	; (80002b0 <ADC_u16_read+0x88>)
+ 8000282:	689b      	ldr	r3, [r3, #8]
+ 8000284:	4a0a      	ldr	r2, [pc, #40]	; (80002b0 <ADC_u16_read+0x88>)
+ 8000286:	f443 0380 	orr.w	r3, r3, #4194304	; 0x400000
+ 800028a:	6093      	str	r3, [r2, #8]
+	// Wait until the end of conversion -> SWSTART -> 0
+	//while(GET_BIT(ADC->CR2 , 22) == 1);
+
+	while(GET_BIT(ADC->SR , 1) != 1);
+ 800028c:	bf00      	nop
+ 800028e:	4b08      	ldr	r3, [pc, #32]	; (80002b0 <ADC_u16_read+0x88>)
+ 8000290:	681b      	ldr	r3, [r3, #0]
+ 8000292:	085b      	lsrs	r3, r3, #1
+ 8000294:	f003 0301 	and.w	r3, r3, #1
+ 8000298:	2b01      	cmp	r3, #1
+ 800029a:	d1f8      	bne.n	800028e <ADC_u16_read+0x66>
+	while(GET_BIT(ADC->SR , 1) != 1);
+*/
+	// Get data -> 0 -> 15
+//	Local_u32Reading = (ADC->DR) & 0x0000ffff;
+	// Return Data
+	return ADC->DR;
+ 800029c:	4b04      	ldr	r3, [pc, #16]	; (80002b0 <ADC_u16_read+0x88>)
+ 800029e:	f8b3 304c 	ldrh.w	r3, [r3, #76]	; 0x4c
+ 80002a2:	b29b      	uxth	r3, r3
+}
+ 80002a4:	4618      	mov	r0, r3
+ 80002a6:	370c      	adds	r7, #12
+ 80002a8:	46bd      	mov	sp, r7
+ 80002aa:	bc80      	pop	{r7}
+ 80002ac:	4770      	bx	lr
+ 80002ae:	bf00      	nop
+ 80002b0:	40012400 	.word	0x40012400
+
+080002b4 <H_COOLER_void_init>:
+#include	"COOLER_interface.h"
+
+
+
+void H_COOLER_void_init(void)
+{
+ 80002b4:	b580      	push	{r7, lr}
+ 80002b6:	af00      	add	r7, sp, #0
+	M_DIO_void_setPinDir(COOLER_PORT,COOLER_PIN,OUT_2MHZ_PP);
+ 80002b8:	2202      	movs	r2, #2
+ 80002ba:	210f      	movs	r1, #15
+ 80002bc:	2002      	movs	r0, #2
+ 80002be:	f000 f815 	bl	80002ec <M_DIO_void_setPinDir>
+}
+ 80002c2:	bf00      	nop
+ 80002c4:	bd80      	pop	{r7, pc}
+
+080002c6 <H_COOLER_void_start>:
+
+void H_COOLER_void_start(void)
+{
+ 80002c6:	b580      	push	{r7, lr}
+ 80002c8:	af00      	add	r7, sp, #0
+	M_DIO_void_setPinVal(COOLER_PORT,COOLER_PIN,DIO_HIGH);
+ 80002ca:	2201      	movs	r2, #1
+ 80002cc:	210f      	movs	r1, #15
+ 80002ce:	2002      	movs	r0, #2
+ 80002d0:	f000 f8e0 	bl	8000494 <M_DIO_void_setPinVal>
+}
+ 80002d4:	bf00      	nop
+ 80002d6:	bd80      	pop	{r7, pc}
+
+080002d8 <H_COOLER_void_stop>:
+
+void H_COOLER_void_stop(void)
+{
+ 80002d8:	b580      	push	{r7, lr}
+ 80002da:	af00      	add	r7, sp, #0
+	M_DIO_void_setPinVal(COOLER_PORT,COOLER_PIN,DIO_LOW);
+ 80002dc:	2200      	movs	r2, #0
+ 80002de:	210f      	movs	r1, #15
+ 80002e0:	2002      	movs	r0, #2
+ 80002e2:	f000 f8d7 	bl	8000494 <M_DIO_void_setPinVal>
+}
+ 80002e6:	bf00      	nop
+ 80002e8:	bd80      	pop	{r7, pc}
+	...
+
+080002ec <M_DIO_void_setPinDir>:
+#include	"DIO_interface.h"
+#include	"DIO_private.h"
+
+
+void	M_DIO_void_setPinDir(u8 PortId, u8 PinId, u8 Direction)
+{
+ 80002ec:	b480      	push	{r7}
+ 80002ee:	b083      	sub	sp, #12
+ 80002f0:	af00      	add	r7, sp, #0
+ 80002f2:	4603      	mov	r3, r0
+ 80002f4:	71fb      	strb	r3, [r7, #7]
+ 80002f6:	460b      	mov	r3, r1
+ 80002f8:	71bb      	strb	r3, [r7, #6]
+ 80002fa:	4613      	mov	r3, r2
+ 80002fc:	717b      	strb	r3, [r7, #5]
+	/*	Range Check						*/
+	if(PortId<3 && PinId < 16 && Direction < 16)
+ 80002fe:	79fb      	ldrb	r3, [r7, #7]
+ 8000300:	2b02      	cmp	r3, #2
+ 8000302:	f200 80b6 	bhi.w	8000472 <M_DIO_void_setPinDir+0x186>
+ 8000306:	79bb      	ldrb	r3, [r7, #6]
+ 8000308:	2b0f      	cmp	r3, #15
+ 800030a:	f200 80b2 	bhi.w	8000472 <M_DIO_void_setPinDir+0x186>
+ 800030e:	797b      	ldrb	r3, [r7, #5]
+ 8000310:	2b0f      	cmp	r3, #15
+ 8000312:	f200 80ae 	bhi.w	8000472 <M_DIO_void_setPinDir+0x186>
+	{
+		if(PinId < 8) /*	Pin0 : Pin7 ==> CRL	*/
+ 8000316:	79bb      	ldrb	r3, [r7, #6]
+ 8000318:	2b07      	cmp	r3, #7
+ 800031a:	d852      	bhi.n	80003c2 <M_DIO_void_setPinDir+0xd6>
+		{
+			switch(PortId)
+ 800031c:	79fb      	ldrb	r3, [r7, #7]
+ 800031e:	2b02      	cmp	r3, #2
+ 8000320:	d037      	beq.n	8000392 <M_DIO_void_setPinDir+0xa6>
+ 8000322:	2b02      	cmp	r3, #2
+ 8000324:	f300 80a5 	bgt.w	8000472 <M_DIO_void_setPinDir+0x186>
+ 8000328:	2b00      	cmp	r3, #0
+ 800032a:	d002      	beq.n	8000332 <M_DIO_void_setPinDir+0x46>
+ 800032c:	2b01      	cmp	r3, #1
+ 800032e:	d018      	beq.n	8000362 <M_DIO_void_setPinDir+0x76>
+		}
+		else{/*		Report Error Out of Range			*/	}
+	}
+	else
+	{/*		Report Error 			*/}	
+}
+ 8000330:	e09f      	b.n	8000472 <M_DIO_void_setPinDir+0x186>
+				case PORTA	:	GPIOA_CRL &=	~(0b1111<<(PinId * 4));		/*Clear the 4 bits */
+ 8000332:	4b52      	ldr	r3, [pc, #328]	; (800047c <M_DIO_void_setPinDir+0x190>)
+ 8000334:	681b      	ldr	r3, [r3, #0]
+ 8000336:	79ba      	ldrb	r2, [r7, #6]
+ 8000338:	0092      	lsls	r2, r2, #2
+ 800033a:	210f      	movs	r1, #15
+ 800033c:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000340:	43d2      	mvns	r2, r2
+ 8000342:	4611      	mov	r1, r2
+ 8000344:	4a4d      	ldr	r2, [pc, #308]	; (800047c <M_DIO_void_setPinDir+0x190>)
+ 8000346:	400b      	ands	r3, r1
+ 8000348:	6013      	str	r3, [r2, #0]
+								GPIOA_CRL |=	((Direction)<<(PinId * 4));	/*Assign the 4 bits */
+ 800034a:	4b4c      	ldr	r3, [pc, #304]	; (800047c <M_DIO_void_setPinDir+0x190>)
+ 800034c:	681b      	ldr	r3, [r3, #0]
+ 800034e:	7979      	ldrb	r1, [r7, #5]
+ 8000350:	79ba      	ldrb	r2, [r7, #6]
+ 8000352:	0092      	lsls	r2, r2, #2
+ 8000354:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000358:	4611      	mov	r1, r2
+ 800035a:	4a48      	ldr	r2, [pc, #288]	; (800047c <M_DIO_void_setPinDir+0x190>)
+ 800035c:	430b      	orrs	r3, r1
+ 800035e:	6013      	str	r3, [r2, #0]
+								break;
+ 8000360:	e087      	b.n	8000472 <M_DIO_void_setPinDir+0x186>
+				case PORTB	:	GPIOB_CRL &=	~(0b1111<<(PinId * 4));		/*Clear the 4 bits */
+ 8000362:	4b47      	ldr	r3, [pc, #284]	; (8000480 <M_DIO_void_setPinDir+0x194>)
+ 8000364:	681b      	ldr	r3, [r3, #0]
+ 8000366:	79ba      	ldrb	r2, [r7, #6]
+ 8000368:	0092      	lsls	r2, r2, #2
+ 800036a:	210f      	movs	r1, #15
+ 800036c:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000370:	43d2      	mvns	r2, r2
+ 8000372:	4611      	mov	r1, r2
+ 8000374:	4a42      	ldr	r2, [pc, #264]	; (8000480 <M_DIO_void_setPinDir+0x194>)
+ 8000376:	400b      	ands	r3, r1
+ 8000378:	6013      	str	r3, [r2, #0]
+								GPIOB_CRL |=	((Direction)<<(PinId * 4));	/*Assign the 4 bits */
+ 800037a:	4b41      	ldr	r3, [pc, #260]	; (8000480 <M_DIO_void_setPinDir+0x194>)
+ 800037c:	681b      	ldr	r3, [r3, #0]
+ 800037e:	7979      	ldrb	r1, [r7, #5]
+ 8000380:	79ba      	ldrb	r2, [r7, #6]
+ 8000382:	0092      	lsls	r2, r2, #2
+ 8000384:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000388:	4611      	mov	r1, r2
+ 800038a:	4a3d      	ldr	r2, [pc, #244]	; (8000480 <M_DIO_void_setPinDir+0x194>)
+ 800038c:	430b      	orrs	r3, r1
+ 800038e:	6013      	str	r3, [r2, #0]
+								break;
+ 8000390:	e06f      	b.n	8000472 <M_DIO_void_setPinDir+0x186>
+				case PORTC	:	GPIOC_CRL &=	~(0b1111<<(PinId * 4));		/*Clear the 4 bits */
+ 8000392:	4b3c      	ldr	r3, [pc, #240]	; (8000484 <M_DIO_void_setPinDir+0x198>)
+ 8000394:	681b      	ldr	r3, [r3, #0]
+ 8000396:	79ba      	ldrb	r2, [r7, #6]
+ 8000398:	0092      	lsls	r2, r2, #2
+ 800039a:	210f      	movs	r1, #15
+ 800039c:	fa01 f202 	lsl.w	r2, r1, r2
+ 80003a0:	43d2      	mvns	r2, r2
+ 80003a2:	4611      	mov	r1, r2
+ 80003a4:	4a37      	ldr	r2, [pc, #220]	; (8000484 <M_DIO_void_setPinDir+0x198>)
+ 80003a6:	400b      	ands	r3, r1
+ 80003a8:	6013      	str	r3, [r2, #0]
+								GPIOC_CRL |=	((Direction)<<(PinId * 4));	/*Assign the 4 bits */
+ 80003aa:	4b36      	ldr	r3, [pc, #216]	; (8000484 <M_DIO_void_setPinDir+0x198>)
+ 80003ac:	681b      	ldr	r3, [r3, #0]
+ 80003ae:	7979      	ldrb	r1, [r7, #5]
+ 80003b0:	79ba      	ldrb	r2, [r7, #6]
+ 80003b2:	0092      	lsls	r2, r2, #2
+ 80003b4:	fa01 f202 	lsl.w	r2, r1, r2
+ 80003b8:	4611      	mov	r1, r2
+ 80003ba:	4a32      	ldr	r2, [pc, #200]	; (8000484 <M_DIO_void_setPinDir+0x198>)
+ 80003bc:	430b      	orrs	r3, r1
+ 80003be:	6013      	str	r3, [r2, #0]
+								break;
+ 80003c0:	e057      	b.n	8000472 <M_DIO_void_setPinDir+0x186>
+		}else if(PinId < 16) /*	Pin8 : Pin15 ==> CRH	*/
+ 80003c2:	79bb      	ldrb	r3, [r7, #6]
+ 80003c4:	2b0f      	cmp	r3, #15
+ 80003c6:	d854      	bhi.n	8000472 <M_DIO_void_setPinDir+0x186>
+			PinId -= 8 ;
+ 80003c8:	79bb      	ldrb	r3, [r7, #6]
+ 80003ca:	3b08      	subs	r3, #8
+ 80003cc:	71bb      	strb	r3, [r7, #6]
+			switch(PortId)
+ 80003ce:	79fb      	ldrb	r3, [r7, #7]
+ 80003d0:	2b02      	cmp	r3, #2
+ 80003d2:	d036      	beq.n	8000442 <M_DIO_void_setPinDir+0x156>
+ 80003d4:	2b02      	cmp	r3, #2
+ 80003d6:	dc4c      	bgt.n	8000472 <M_DIO_void_setPinDir+0x186>
+ 80003d8:	2b00      	cmp	r3, #0
+ 80003da:	d002      	beq.n	80003e2 <M_DIO_void_setPinDir+0xf6>
+ 80003dc:	2b01      	cmp	r3, #1
+ 80003de:	d018      	beq.n	8000412 <M_DIO_void_setPinDir+0x126>
+}
+ 80003e0:	e047      	b.n	8000472 <M_DIO_void_setPinDir+0x186>
+				case PORTA	:	GPIOA_CRH &=	~(0b1111<<(PinId * 4));		/*Clear the 4 bits */
+ 80003e2:	4b29      	ldr	r3, [pc, #164]	; (8000488 <M_DIO_void_setPinDir+0x19c>)
+ 80003e4:	681b      	ldr	r3, [r3, #0]
+ 80003e6:	79ba      	ldrb	r2, [r7, #6]
+ 80003e8:	0092      	lsls	r2, r2, #2
+ 80003ea:	210f      	movs	r1, #15
+ 80003ec:	fa01 f202 	lsl.w	r2, r1, r2
+ 80003f0:	43d2      	mvns	r2, r2
+ 80003f2:	4611      	mov	r1, r2
+ 80003f4:	4a24      	ldr	r2, [pc, #144]	; (8000488 <M_DIO_void_setPinDir+0x19c>)
+ 80003f6:	400b      	ands	r3, r1
+ 80003f8:	6013      	str	r3, [r2, #0]
+								GPIOA_CRH |=	((Direction)<<(PinId * 4));	/*Assign the 4 bits */
+ 80003fa:	4b23      	ldr	r3, [pc, #140]	; (8000488 <M_DIO_void_setPinDir+0x19c>)
+ 80003fc:	681b      	ldr	r3, [r3, #0]
+ 80003fe:	7979      	ldrb	r1, [r7, #5]
+ 8000400:	79ba      	ldrb	r2, [r7, #6]
+ 8000402:	0092      	lsls	r2, r2, #2
+ 8000404:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000408:	4611      	mov	r1, r2
+ 800040a:	4a1f      	ldr	r2, [pc, #124]	; (8000488 <M_DIO_void_setPinDir+0x19c>)
+ 800040c:	430b      	orrs	r3, r1
+ 800040e:	6013      	str	r3, [r2, #0]
+								break;
+ 8000410:	e02f      	b.n	8000472 <M_DIO_void_setPinDir+0x186>
+				case PORTB	:	GPIOB_CRH &=	~(0b1111<<(PinId * 4));		/*Clear the 4 bits */
+ 8000412:	4b1e      	ldr	r3, [pc, #120]	; (800048c <M_DIO_void_setPinDir+0x1a0>)
+ 8000414:	681b      	ldr	r3, [r3, #0]
+ 8000416:	79ba      	ldrb	r2, [r7, #6]
+ 8000418:	0092      	lsls	r2, r2, #2
+ 800041a:	210f      	movs	r1, #15
+ 800041c:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000420:	43d2      	mvns	r2, r2
+ 8000422:	4611      	mov	r1, r2
+ 8000424:	4a19      	ldr	r2, [pc, #100]	; (800048c <M_DIO_void_setPinDir+0x1a0>)
+ 8000426:	400b      	ands	r3, r1
+ 8000428:	6013      	str	r3, [r2, #0]
+								GPIOB_CRH |=	((Direction)<<(PinId * 4));	/*Assign the 4 bits */
+ 800042a:	4b18      	ldr	r3, [pc, #96]	; (800048c <M_DIO_void_setPinDir+0x1a0>)
+ 800042c:	681b      	ldr	r3, [r3, #0]
+ 800042e:	7979      	ldrb	r1, [r7, #5]
+ 8000430:	79ba      	ldrb	r2, [r7, #6]
+ 8000432:	0092      	lsls	r2, r2, #2
+ 8000434:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000438:	4611      	mov	r1, r2
+ 800043a:	4a14      	ldr	r2, [pc, #80]	; (800048c <M_DIO_void_setPinDir+0x1a0>)
+ 800043c:	430b      	orrs	r3, r1
+ 800043e:	6013      	str	r3, [r2, #0]
+								break;
+ 8000440:	e017      	b.n	8000472 <M_DIO_void_setPinDir+0x186>
+				case PORTC	:	GPIOC_CRH &=	~(0b1111<<(PinId * 4));		/*Clear the 4 bits */
+ 8000442:	4b13      	ldr	r3, [pc, #76]	; (8000490 <M_DIO_void_setPinDir+0x1a4>)
+ 8000444:	681b      	ldr	r3, [r3, #0]
+ 8000446:	79ba      	ldrb	r2, [r7, #6]
+ 8000448:	0092      	lsls	r2, r2, #2
+ 800044a:	210f      	movs	r1, #15
+ 800044c:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000450:	43d2      	mvns	r2, r2
+ 8000452:	4611      	mov	r1, r2
+ 8000454:	4a0e      	ldr	r2, [pc, #56]	; (8000490 <M_DIO_void_setPinDir+0x1a4>)
+ 8000456:	400b      	ands	r3, r1
+ 8000458:	6013      	str	r3, [r2, #0]
+								GPIOC_CRH |=	((Direction)<<(PinId * 4));	/*Assign the 4 bits */
+ 800045a:	4b0d      	ldr	r3, [pc, #52]	; (8000490 <M_DIO_void_setPinDir+0x1a4>)
+ 800045c:	681b      	ldr	r3, [r3, #0]
+ 800045e:	7979      	ldrb	r1, [r7, #5]
+ 8000460:	79ba      	ldrb	r2, [r7, #6]
+ 8000462:	0092      	lsls	r2, r2, #2
+ 8000464:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000468:	4611      	mov	r1, r2
+ 800046a:	4a09      	ldr	r2, [pc, #36]	; (8000490 <M_DIO_void_setPinDir+0x1a4>)
+ 800046c:	430b      	orrs	r3, r1
+ 800046e:	6013      	str	r3, [r2, #0]
+								break;
+ 8000470:	bf00      	nop
+}
+ 8000472:	bf00      	nop
+ 8000474:	370c      	adds	r7, #12
+ 8000476:	46bd      	mov	sp, r7
+ 8000478:	bc80      	pop	{r7}
+ 800047a:	4770      	bx	lr
+ 800047c:	40010800 	.word	0x40010800
+ 8000480:	40010c00 	.word	0x40010c00
+ 8000484:	40011000 	.word	0x40011000
+ 8000488:	40010804 	.word	0x40010804
+ 800048c:	40010c04 	.word	0x40010c04
+ 8000490:	40011004 	.word	0x40011004
+
+08000494 <M_DIO_void_setPinVal>:
+void	M_DIO_void_setPinVal(u8 PortId, u8 PinId, u8 Value)
+{
+ 8000494:	b480      	push	{r7}
+ 8000496:	b083      	sub	sp, #12
+ 8000498:	af00      	add	r7, sp, #0
+ 800049a:	4603      	mov	r3, r0
+ 800049c:	71fb      	strb	r3, [r7, #7]
+ 800049e:	460b      	mov	r3, r1
+ 80004a0:	71bb      	strb	r3, [r7, #6]
+ 80004a2:	4613      	mov	r3, r2
+ 80004a4:	717b      	strb	r3, [r7, #5]
+	/*	Range Check						*/
+	if(PortId<3 && PinId < 16)
+ 80004a6:	79fb      	ldrb	r3, [r7, #7]
+ 80004a8:	2b02      	cmp	r3, #2
+ 80004aa:	d861      	bhi.n	8000570 <M_DIO_void_setPinVal+0xdc>
+ 80004ac:	79bb      	ldrb	r3, [r7, #6]
+ 80004ae:	2b0f      	cmp	r3, #15
+ 80004b0:	d85e      	bhi.n	8000570 <M_DIO_void_setPinVal+0xdc>
+	{
+		if(Value == DIO_LOW)
+ 80004b2:	797b      	ldrb	r3, [r7, #5]
+ 80004b4:	2b00      	cmp	r3, #0
+ 80004b6:	d12d      	bne.n	8000514 <M_DIO_void_setPinVal+0x80>
+		{
+			switch(PortId)
+ 80004b8:	79fb      	ldrb	r3, [r7, #7]
+ 80004ba:	2b02      	cmp	r3, #2
+ 80004bc:	d01e      	beq.n	80004fc <M_DIO_void_setPinVal+0x68>
+ 80004be:	2b02      	cmp	r3, #2
+ 80004c0:	dc56      	bgt.n	8000570 <M_DIO_void_setPinVal+0xdc>
+ 80004c2:	2b00      	cmp	r3, #0
+ 80004c4:	d002      	beq.n	80004cc <M_DIO_void_setPinVal+0x38>
+ 80004c6:	2b01      	cmp	r3, #1
+ 80004c8:	d00c      	beq.n	80004e4 <M_DIO_void_setPinVal+0x50>
+		}
+		else{/*		Report Error Out of Range			*/	}
+	}
+	else
+	{/*		Report Error 			*/}		
+}
+ 80004ca:	e051      	b.n	8000570 <M_DIO_void_setPinVal+0xdc>
+				case PORTA	:	CLR_BIT(GPIOA_ODR ,PinId);	break;
+ 80004cc:	4b2b      	ldr	r3, [pc, #172]	; (800057c <M_DIO_void_setPinVal+0xe8>)
+ 80004ce:	681b      	ldr	r3, [r3, #0]
+ 80004d0:	79ba      	ldrb	r2, [r7, #6]
+ 80004d2:	2101      	movs	r1, #1
+ 80004d4:	fa01 f202 	lsl.w	r2, r1, r2
+ 80004d8:	43d2      	mvns	r2, r2
+ 80004da:	4611      	mov	r1, r2
+ 80004dc:	4a27      	ldr	r2, [pc, #156]	; (800057c <M_DIO_void_setPinVal+0xe8>)
+ 80004de:	400b      	ands	r3, r1
+ 80004e0:	6013      	str	r3, [r2, #0]
+ 80004e2:	e045      	b.n	8000570 <M_DIO_void_setPinVal+0xdc>
+				case PORTB	:	CLR_BIT(GPIOB_ODR ,PinId);	break;
+ 80004e4:	4b26      	ldr	r3, [pc, #152]	; (8000580 <M_DIO_void_setPinVal+0xec>)
+ 80004e6:	681b      	ldr	r3, [r3, #0]
+ 80004e8:	79ba      	ldrb	r2, [r7, #6]
+ 80004ea:	2101      	movs	r1, #1
+ 80004ec:	fa01 f202 	lsl.w	r2, r1, r2
+ 80004f0:	43d2      	mvns	r2, r2
+ 80004f2:	4611      	mov	r1, r2
+ 80004f4:	4a22      	ldr	r2, [pc, #136]	; (8000580 <M_DIO_void_setPinVal+0xec>)
+ 80004f6:	400b      	ands	r3, r1
+ 80004f8:	6013      	str	r3, [r2, #0]
+ 80004fa:	e039      	b.n	8000570 <M_DIO_void_setPinVal+0xdc>
+				case PORTC	:	CLR_BIT(GPIOC_ODR ,PinId);	break;
+ 80004fc:	4b21      	ldr	r3, [pc, #132]	; (8000584 <M_DIO_void_setPinVal+0xf0>)
+ 80004fe:	681b      	ldr	r3, [r3, #0]
+ 8000500:	79ba      	ldrb	r2, [r7, #6]
+ 8000502:	2101      	movs	r1, #1
+ 8000504:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000508:	43d2      	mvns	r2, r2
+ 800050a:	4611      	mov	r1, r2
+ 800050c:	4a1d      	ldr	r2, [pc, #116]	; (8000584 <M_DIO_void_setPinVal+0xf0>)
+ 800050e:	400b      	ands	r3, r1
+ 8000510:	6013      	str	r3, [r2, #0]
+ 8000512:	e02d      	b.n	8000570 <M_DIO_void_setPinVal+0xdc>
+		}else if(Value == DIO_HIGH)
+ 8000514:	797b      	ldrb	r3, [r7, #5]
+ 8000516:	2b01      	cmp	r3, #1
+ 8000518:	d12a      	bne.n	8000570 <M_DIO_void_setPinVal+0xdc>
+			switch(PortId)
+ 800051a:	79fb      	ldrb	r3, [r7, #7]
+ 800051c:	2b02      	cmp	r3, #2
+ 800051e:	d01c      	beq.n	800055a <M_DIO_void_setPinVal+0xc6>
+ 8000520:	2b02      	cmp	r3, #2
+ 8000522:	dc25      	bgt.n	8000570 <M_DIO_void_setPinVal+0xdc>
+ 8000524:	2b00      	cmp	r3, #0
+ 8000526:	d002      	beq.n	800052e <M_DIO_void_setPinVal+0x9a>
+ 8000528:	2b01      	cmp	r3, #1
+ 800052a:	d00b      	beq.n	8000544 <M_DIO_void_setPinVal+0xb0>
+}
+ 800052c:	e020      	b.n	8000570 <M_DIO_void_setPinVal+0xdc>
+				case PORTA	:	SET_BIT(GPIOA_ODR ,PinId);	break;
+ 800052e:	4b13      	ldr	r3, [pc, #76]	; (800057c <M_DIO_void_setPinVal+0xe8>)
+ 8000530:	681b      	ldr	r3, [r3, #0]
+ 8000532:	79ba      	ldrb	r2, [r7, #6]
+ 8000534:	2101      	movs	r1, #1
+ 8000536:	fa01 f202 	lsl.w	r2, r1, r2
+ 800053a:	4611      	mov	r1, r2
+ 800053c:	4a0f      	ldr	r2, [pc, #60]	; (800057c <M_DIO_void_setPinVal+0xe8>)
+ 800053e:	430b      	orrs	r3, r1
+ 8000540:	6013      	str	r3, [r2, #0]
+ 8000542:	e015      	b.n	8000570 <M_DIO_void_setPinVal+0xdc>
+				case PORTB	:	SET_BIT(GPIOB_ODR ,PinId);	break;
+ 8000544:	4b0e      	ldr	r3, [pc, #56]	; (8000580 <M_DIO_void_setPinVal+0xec>)
+ 8000546:	681b      	ldr	r3, [r3, #0]
+ 8000548:	79ba      	ldrb	r2, [r7, #6]
+ 800054a:	2101      	movs	r1, #1
+ 800054c:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000550:	4611      	mov	r1, r2
+ 8000552:	4a0b      	ldr	r2, [pc, #44]	; (8000580 <M_DIO_void_setPinVal+0xec>)
+ 8000554:	430b      	orrs	r3, r1
+ 8000556:	6013      	str	r3, [r2, #0]
+ 8000558:	e00a      	b.n	8000570 <M_DIO_void_setPinVal+0xdc>
+				case PORTC	:	SET_BIT(GPIOC_ODR ,PinId);	break;
+ 800055a:	4b0a      	ldr	r3, [pc, #40]	; (8000584 <M_DIO_void_setPinVal+0xf0>)
+ 800055c:	681b      	ldr	r3, [r3, #0]
+ 800055e:	79ba      	ldrb	r2, [r7, #6]
+ 8000560:	2101      	movs	r1, #1
+ 8000562:	fa01 f202 	lsl.w	r2, r1, r2
+ 8000566:	4611      	mov	r1, r2
+ 8000568:	4a06      	ldr	r2, [pc, #24]	; (8000584 <M_DIO_void_setPinVal+0xf0>)
+ 800056a:	430b      	orrs	r3, r1
+ 800056c:	6013      	str	r3, [r2, #0]
+ 800056e:	bf00      	nop
+}
+ 8000570:	bf00      	nop
+ 8000572:	370c      	adds	r7, #12
+ 8000574:	46bd      	mov	sp, r7
+ 8000576:	bc80      	pop	{r7}
+ 8000578:	4770      	bx	lr
+ 800057a:	bf00      	nop
+ 800057c:	4001080c 	.word	0x4001080c
+ 8000580:	40010c0c 	.word	0x40010c0c
+ 8000584:	4001100c 	.word	0x4001100c
+
+08000588 <EXTI_u8PinInit>:
+#include "EXTI_config.h"
+
+static void (*EXTI_APF[16])(void) = {NULL};
+
+u8 EXTI_u8PinInit   (const EXTI_PinConfig_t * Copy_pstrPinInit)
+{
+ 8000588:	b480      	push	{r7}
+ 800058a:	b085      	sub	sp, #20
+ 800058c:	af00      	add	r7, sp, #0
+ 800058e:	6078      	str	r0, [r7, #4]
+	u8 Local_u8ErrorState = STD_TYPES_OK;
+ 8000590:	2301      	movs	r3, #1
+ 8000592:	73fb      	strb	r3, [r7, #15]
+	u8 Local_u8RegIndex,Local_u8ShiftValue;
+	if(Copy_pstrPinInit != NULL)
+ 8000594:	687b      	ldr	r3, [r7, #4]
+ 8000596:	2b00      	cmp	r3, #0
+ 8000598:	f000 808b 	beq.w	80006b2 <EXTI_u8PinInit+0x12a>
+	{
+		/* Select EXTI Number */
+		Local_u8RegIndex     = Copy_pstrPinInit->PinNb / 4 ;
+ 800059c:	687b      	ldr	r3, [r7, #4]
+ 800059e:	785b      	ldrb	r3, [r3, #1]
+ 80005a0:	089b      	lsrs	r3, r3, #2
+ 80005a2:	73bb      	strb	r3, [r7, #14]
+		Local_u8ShiftValue   = Copy_pstrPinInit->PinNb % 4 ;
+ 80005a4:	687b      	ldr	r3, [r7, #4]
+ 80005a6:	785b      	ldrb	r3, [r3, #1]
+ 80005a8:	f003 0303 	and.w	r3, r3, #3
+ 80005ac:	737b      	strb	r3, [r7, #13]
+
+		/* Clear 4 bits to select the source of EXTI */
+		AF->EXTICR[Local_u8RegIndex] &= ~((0b1111)<<(Local_u8ShiftValue * 4));
+ 80005ae:	4a45      	ldr	r2, [pc, #276]	; (80006c4 <EXTI_u8PinInit+0x13c>)
+ 80005b0:	7bbb      	ldrb	r3, [r7, #14]
+ 80005b2:	3302      	adds	r3, #2
+ 80005b4:	f852 2023 	ldr.w	r2, [r2, r3, lsl #2]
+ 80005b8:	7b7b      	ldrb	r3, [r7, #13]
+ 80005ba:	009b      	lsls	r3, r3, #2
+ 80005bc:	210f      	movs	r1, #15
+ 80005be:	fa01 f303 	lsl.w	r3, r1, r3
+ 80005c2:	43db      	mvns	r3, r3
+ 80005c4:	4618      	mov	r0, r3
+ 80005c6:	493f      	ldr	r1, [pc, #252]	; (80006c4 <EXTI_u8PinInit+0x13c>)
+ 80005c8:	7bbb      	ldrb	r3, [r7, #14]
+ 80005ca:	4002      	ands	r2, r0
+ 80005cc:	3302      	adds	r3, #2
+ 80005ce:	f841 2023 	str.w	r2, [r1, r3, lsl #2]
+		AF->EXTICR[Local_u8RegIndex] |= (Copy_pstrPinInit->PortNb << (Local_u8ShiftValue * 4));
+ 80005d2:	4a3c      	ldr	r2, [pc, #240]	; (80006c4 <EXTI_u8PinInit+0x13c>)
+ 80005d4:	7bbb      	ldrb	r3, [r7, #14]
+ 80005d6:	3302      	adds	r3, #2
+ 80005d8:	f852 2023 	ldr.w	r2, [r2, r3, lsl #2]
+ 80005dc:	687b      	ldr	r3, [r7, #4]
+ 80005de:	781b      	ldrb	r3, [r3, #0]
+ 80005e0:	4619      	mov	r1, r3
+ 80005e2:	7b7b      	ldrb	r3, [r7, #13]
+ 80005e4:	009b      	lsls	r3, r3, #2
+ 80005e6:	fa01 f303 	lsl.w	r3, r1, r3
+ 80005ea:	4618      	mov	r0, r3
+ 80005ec:	4935      	ldr	r1, [pc, #212]	; (80006c4 <EXTI_u8PinInit+0x13c>)
+ 80005ee:	7bbb      	ldrb	r3, [r7, #14]
+ 80005f0:	4302      	orrs	r2, r0
+ 80005f2:	3302      	adds	r3, #2
+ 80005f4:	f841 2023 	str.w	r2, [r1, r3, lsl #2]
+
+		/* Select Edge Source (Falling edge or Raising or Any Edge) */
+		switch(Copy_pstrPinInit->TriggerLevel)
+ 80005f8:	687b      	ldr	r3, [r7, #4]
+ 80005fa:	789b      	ldrb	r3, [r3, #2]
+ 80005fc:	2b02      	cmp	r3, #2
+ 80005fe:	d036      	beq.n	800066e <EXTI_u8PinInit+0xe6>
+ 8000600:	2b02      	cmp	r3, #2
+ 8000602:	dc4b      	bgt.n	800069c <EXTI_u8PinInit+0x114>
+ 8000604:	2b00      	cmp	r3, #0
+ 8000606:	d002      	beq.n	800060e <EXTI_u8PinInit+0x86>
+ 8000608:	2b01      	cmp	r3, #1
+ 800060a:	d018      	beq.n	800063e <EXTI_u8PinInit+0xb6>
+ 800060c:	e046      	b.n	800069c <EXTI_u8PinInit+0x114>
+		{
+		case EXTI_u8_FALLING_EDGE:
+			CLR_BIT(EXTI->RTSR,Copy_pstrPinInit->PinNb);
+ 800060e:	4b2e      	ldr	r3, [pc, #184]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000610:	689b      	ldr	r3, [r3, #8]
+ 8000612:	687a      	ldr	r2, [r7, #4]
+ 8000614:	7852      	ldrb	r2, [r2, #1]
+ 8000616:	4611      	mov	r1, r2
+ 8000618:	2201      	movs	r2, #1
+ 800061a:	408a      	lsls	r2, r1
+ 800061c:	43d2      	mvns	r2, r2
+ 800061e:	4611      	mov	r1, r2
+ 8000620:	4a29      	ldr	r2, [pc, #164]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000622:	400b      	ands	r3, r1
+ 8000624:	6093      	str	r3, [r2, #8]
+			SET_BIT(EXTI->FTSR,Copy_pstrPinInit->PinNb);
+ 8000626:	4b28      	ldr	r3, [pc, #160]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000628:	68db      	ldr	r3, [r3, #12]
+ 800062a:	687a      	ldr	r2, [r7, #4]
+ 800062c:	7852      	ldrb	r2, [r2, #1]
+ 800062e:	4611      	mov	r1, r2
+ 8000630:	2201      	movs	r2, #1
+ 8000632:	408a      	lsls	r2, r1
+ 8000634:	4611      	mov	r1, r2
+ 8000636:	4a24      	ldr	r2, [pc, #144]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000638:	430b      	orrs	r3, r1
+ 800063a:	60d3      	str	r3, [r2, #12]
+			break;
+ 800063c:	e030      	b.n	80006a0 <EXTI_u8PinInit+0x118>
+		case EXTI_u8_RAISING_EDGE:
+			CLR_BIT(EXTI->FTSR,Copy_pstrPinInit->PinNb);
+ 800063e:	4b22      	ldr	r3, [pc, #136]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000640:	68db      	ldr	r3, [r3, #12]
+ 8000642:	687a      	ldr	r2, [r7, #4]
+ 8000644:	7852      	ldrb	r2, [r2, #1]
+ 8000646:	4611      	mov	r1, r2
+ 8000648:	2201      	movs	r2, #1
+ 800064a:	408a      	lsls	r2, r1
+ 800064c:	43d2      	mvns	r2, r2
+ 800064e:	4611      	mov	r1, r2
+ 8000650:	4a1d      	ldr	r2, [pc, #116]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000652:	400b      	ands	r3, r1
+ 8000654:	60d3      	str	r3, [r2, #12]
+			SET_BIT(EXTI->RTSR,Copy_pstrPinInit->PinNb);
+ 8000656:	4b1c      	ldr	r3, [pc, #112]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000658:	689b      	ldr	r3, [r3, #8]
+ 800065a:	687a      	ldr	r2, [r7, #4]
+ 800065c:	7852      	ldrb	r2, [r2, #1]
+ 800065e:	4611      	mov	r1, r2
+ 8000660:	2201      	movs	r2, #1
+ 8000662:	408a      	lsls	r2, r1
+ 8000664:	4611      	mov	r1, r2
+ 8000666:	4a18      	ldr	r2, [pc, #96]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000668:	430b      	orrs	r3, r1
+ 800066a:	6093      	str	r3, [r2, #8]
+			break;
+ 800066c:	e018      	b.n	80006a0 <EXTI_u8PinInit+0x118>
+		case EXTI_u8_ANY_LOGICAL_CHANGE:
+			SET_BIT(EXTI->RTSR,Copy_pstrPinInit->PinNb);
+ 800066e:	4b16      	ldr	r3, [pc, #88]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000670:	689b      	ldr	r3, [r3, #8]
+ 8000672:	687a      	ldr	r2, [r7, #4]
+ 8000674:	7852      	ldrb	r2, [r2, #1]
+ 8000676:	4611      	mov	r1, r2
+ 8000678:	2201      	movs	r2, #1
+ 800067a:	408a      	lsls	r2, r1
+ 800067c:	4611      	mov	r1, r2
+ 800067e:	4a12      	ldr	r2, [pc, #72]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000680:	430b      	orrs	r3, r1
+ 8000682:	6093      	str	r3, [r2, #8]
+			SET_BIT(EXTI->FTSR,Copy_pstrPinInit->PinNb);
+ 8000684:	4b10      	ldr	r3, [pc, #64]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000686:	68db      	ldr	r3, [r3, #12]
+ 8000688:	687a      	ldr	r2, [r7, #4]
+ 800068a:	7852      	ldrb	r2, [r2, #1]
+ 800068c:	4611      	mov	r1, r2
+ 800068e:	2201      	movs	r2, #1
+ 8000690:	408a      	lsls	r2, r1
+ 8000692:	4611      	mov	r1, r2
+ 8000694:	4a0c      	ldr	r2, [pc, #48]	; (80006c8 <EXTI_u8PinInit+0x140>)
+ 8000696:	430b      	orrs	r3, r1
+ 8000698:	60d3      	str	r3, [r2, #12]
+			break;
+ 800069a:	e001      	b.n	80006a0 <EXTI_u8PinInit+0x118>
+		default: Local_u8ErrorState = STD_TYPES_NOK;
+ 800069c:	2300      	movs	r3, #0
+ 800069e:	73fb      	strb	r3, [r7, #15]
+		}
+
+		/* Init Global Pointer to function used be ISR */
+		EXTI_APF[Copy_pstrPinInit->PinNb] = Copy_pstrPinInit->pfunc;
+ 80006a0:	687b      	ldr	r3, [r7, #4]
+ 80006a2:	785b      	ldrb	r3, [r3, #1]
+ 80006a4:	4619      	mov	r1, r3
+ 80006a6:	687b      	ldr	r3, [r7, #4]
+ 80006a8:	685b      	ldr	r3, [r3, #4]
+ 80006aa:	4a08      	ldr	r2, [pc, #32]	; (80006cc <EXTI_u8PinInit+0x144>)
+ 80006ac:	f842 3021 	str.w	r3, [r2, r1, lsl #2]
+ 80006b0:	e001      	b.n	80006b6 <EXTI_u8PinInit+0x12e>
+	}
+	else
+	{
+		Local_u8ErrorState = STD_TYPES_NOK;
+ 80006b2:	2300      	movs	r3, #0
+ 80006b4:	73fb      	strb	r3, [r7, #15]
+	}
+	return Local_u8ErrorState;
+ 80006b6:	7bfb      	ldrb	r3, [r7, #15]
+}
+ 80006b8:	4618      	mov	r0, r3
+ 80006ba:	3714      	adds	r7, #20
+ 80006bc:	46bd      	mov	sp, r7
+ 80006be:	bc80      	pop	{r7}
+ 80006c0:	4770      	bx	lr
+ 80006c2:	bf00      	nop
+ 80006c4:	40010000 	.word	0x40010000
+ 80006c8:	40010400 	.word	0x40010400
+ 80006cc:	20000020 	.word	0x20000020
+
+080006d0 <EXTI_u8IntEnable>:
+
+u8 EXTI_u8IntEnable (const EXTI_PinConfig_t * Copy_pstrPinInit)
+{
+ 80006d0:	b480      	push	{r7}
+ 80006d2:	b085      	sub	sp, #20
+ 80006d4:	af00      	add	r7, sp, #0
+ 80006d6:	6078      	str	r0, [r7, #4]
+	u8 Local_u8Errorstate = STD_TYPES_OK;
+ 80006d8:	2301      	movs	r3, #1
+ 80006da:	73fb      	strb	r3, [r7, #15]
+	if(Copy_pstrPinInit != NULL)
+ 80006dc:	687b      	ldr	r3, [r7, #4]
+ 80006de:	2b00      	cmp	r3, #0
+ 80006e0:	d00b      	beq.n	80006fa <EXTI_u8IntEnable+0x2a>
+	{
+		/* Enable the wanted EXTI */
+		SET_BIT(EXTI->IMR,Copy_pstrPinInit->PinNb);
+ 80006e2:	4b0a      	ldr	r3, [pc, #40]	; (800070c <EXTI_u8IntEnable+0x3c>)
+ 80006e4:	681b      	ldr	r3, [r3, #0]
+ 80006e6:	687a      	ldr	r2, [r7, #4]
+ 80006e8:	7852      	ldrb	r2, [r2, #1]
+ 80006ea:	4611      	mov	r1, r2
+ 80006ec:	2201      	movs	r2, #1
+ 80006ee:	408a      	lsls	r2, r1
+ 80006f0:	4611      	mov	r1, r2
+ 80006f2:	4a06      	ldr	r2, [pc, #24]	; (800070c <EXTI_u8IntEnable+0x3c>)
+ 80006f4:	430b      	orrs	r3, r1
+ 80006f6:	6013      	str	r3, [r2, #0]
+ 80006f8:	e001      	b.n	80006fe <EXTI_u8IntEnable+0x2e>
+	}
+	else
+	{
+		Local_u8Errorstate = STD_TYPES_NOK;
+ 80006fa:	2300      	movs	r3, #0
+ 80006fc:	73fb      	strb	r3, [r7, #15]
+	}
+	return Local_u8Errorstate;
+ 80006fe:	7bfb      	ldrb	r3, [r7, #15]
+}
+ 8000700:	4618      	mov	r0, r3
+ 8000702:	3714      	adds	r7, #20
+ 8000704:	46bd      	mov	sp, r7
+ 8000706:	bc80      	pop	{r7}
+ 8000708:	4770      	bx	lr
+ 800070a:	bf00      	nop
+ 800070c:	40010400 	.word	0x40010400
+
+08000710 <EXTI0_IRQHandler>:
+	return Local_u8Errorstate;
+}
+
+/* ISR Imp */
+void EXTI0_IRQHandler(void)
+{
+ 8000710:	b580      	push	{r7, lr}
+ 8000712:	af00      	add	r7, sp, #0
+	if(EXTI_APF[0]!= NULL)
+ 8000714:	4b07      	ldr	r3, [pc, #28]	; (8000734 <EXTI0_IRQHandler+0x24>)
+ 8000716:	681b      	ldr	r3, [r3, #0]
+ 8000718:	2b00      	cmp	r3, #0
+ 800071a:	d002      	beq.n	8000722 <EXTI0_IRQHandler+0x12>
+	{
+		EXTI_APF[0]();
+ 800071c:	4b05      	ldr	r3, [pc, #20]	; (8000734 <EXTI0_IRQHandler+0x24>)
+ 800071e:	681b      	ldr	r3, [r3, #0]
+ 8000720:	4798      	blx	r3
+	}
+	/* Clear Pending Flag */
+	SET_BIT(EXTI->PR,0);
+ 8000722:	4b05      	ldr	r3, [pc, #20]	; (8000738 <EXTI0_IRQHandler+0x28>)
+ 8000724:	695b      	ldr	r3, [r3, #20]
+ 8000726:	4a04      	ldr	r2, [pc, #16]	; (8000738 <EXTI0_IRQHandler+0x28>)
+ 8000728:	f043 0301 	orr.w	r3, r3, #1
+ 800072c:	6153      	str	r3, [r2, #20]
+}
+ 800072e:	bf00      	nop
+ 8000730:	bd80      	pop	{r7, pc}
+ 8000732:	bf00      	nop
+ 8000734:	20000020 	.word	0x20000020
+ 8000738:	40010400 	.word	0x40010400
+
+0800073c <EXTI1_IRQHandler>:
+
+void EXTI1_IRQHandler(void)
+{
+ 800073c:	b580      	push	{r7, lr}
+ 800073e:	af00      	add	r7, sp, #0
+	if(EXTI_APF[1]!= NULL)
+ 8000740:	4b07      	ldr	r3, [pc, #28]	; (8000760 <EXTI1_IRQHandler+0x24>)
+ 8000742:	685b      	ldr	r3, [r3, #4]
+ 8000744:	2b00      	cmp	r3, #0
+ 8000746:	d002      	beq.n	800074e <EXTI1_IRQHandler+0x12>
+	{
+		EXTI_APF[1]();
+ 8000748:	4b05      	ldr	r3, [pc, #20]	; (8000760 <EXTI1_IRQHandler+0x24>)
+ 800074a:	685b      	ldr	r3, [r3, #4]
+ 800074c:	4798      	blx	r3
+	}
+	/* Clear Pending Flag */
+	SET_BIT(EXTI->PR,1);
+ 800074e:	4b05      	ldr	r3, [pc, #20]	; (8000764 <EXTI1_IRQHandler+0x28>)
+ 8000750:	695b      	ldr	r3, [r3, #20]
+ 8000752:	4a04      	ldr	r2, [pc, #16]	; (8000764 <EXTI1_IRQHandler+0x28>)
+ 8000754:	f043 0302 	orr.w	r3, r3, #2
+ 8000758:	6153      	str	r3, [r2, #20]
+}
+ 800075a:	bf00      	nop
+ 800075c:	bd80      	pop	{r7, pc}
+ 800075e:	bf00      	nop
+ 8000760:	20000020 	.word	0x20000020
+ 8000764:	40010400 	.word	0x40010400
+
+08000768 <EXTI2_IRQHandler>:
+void EXTI2_IRQHandler(void)
+{
+ 8000768:	b580      	push	{r7, lr}
+ 800076a:	af00      	add	r7, sp, #0
+	if(EXTI_APF[2]!= NULL)
+ 800076c:	4b07      	ldr	r3, [pc, #28]	; (800078c <EXTI2_IRQHandler+0x24>)
+ 800076e:	689b      	ldr	r3, [r3, #8]
+ 8000770:	2b00      	cmp	r3, #0
+ 8000772:	d002      	beq.n	800077a <EXTI2_IRQHandler+0x12>
+	{
+		EXTI_APF[2]();
+ 8000774:	4b05      	ldr	r3, [pc, #20]	; (800078c <EXTI2_IRQHandler+0x24>)
+ 8000776:	689b      	ldr	r3, [r3, #8]
+ 8000778:	4798      	blx	r3
+	}
+	/* Clear Pending Flag */
+	SET_BIT(EXTI->PR,2);
+ 800077a:	4b05      	ldr	r3, [pc, #20]	; (8000790 <EXTI2_IRQHandler+0x28>)
+ 800077c:	695b      	ldr	r3, [r3, #20]
+ 800077e:	4a04      	ldr	r2, [pc, #16]	; (8000790 <EXTI2_IRQHandler+0x28>)
+ 8000780:	f043 0304 	orr.w	r3, r3, #4
+ 8000784:	6153      	str	r3, [r2, #20]
+}
+ 8000786:	bf00      	nop
+ 8000788:	bd80      	pop	{r7, pc}
+ 800078a:	bf00      	nop
+ 800078c:	20000020 	.word	0x20000020
+ 8000790:	40010400 	.word	0x40010400
+
+08000794 <EXTI3_IRQHandler>:
+void EXTI3_IRQHandler(void)
+{
+ 8000794:	b580      	push	{r7, lr}
+ 8000796:	af00      	add	r7, sp, #0
+	if(EXTI_APF[3]!= NULL)
+ 8000798:	4b07      	ldr	r3, [pc, #28]	; (80007b8 <EXTI3_IRQHandler+0x24>)
+ 800079a:	68db      	ldr	r3, [r3, #12]
+ 800079c:	2b00      	cmp	r3, #0
+ 800079e:	d002      	beq.n	80007a6 <EXTI3_IRQHandler+0x12>
+	{
+		EXTI_APF[3]();
+ 80007a0:	4b05      	ldr	r3, [pc, #20]	; (80007b8 <EXTI3_IRQHandler+0x24>)
+ 80007a2:	68db      	ldr	r3, [r3, #12]
+ 80007a4:	4798      	blx	r3
+	}
+	/* Clear Pending Flag */
+	SET_BIT(EXTI->PR,3);
+ 80007a6:	4b05      	ldr	r3, [pc, #20]	; (80007bc <EXTI3_IRQHandler+0x28>)
+ 80007a8:	695b      	ldr	r3, [r3, #20]
+ 80007aa:	4a04      	ldr	r2, [pc, #16]	; (80007bc <EXTI3_IRQHandler+0x28>)
+ 80007ac:	f043 0308 	orr.w	r3, r3, #8
+ 80007b0:	6153      	str	r3, [r2, #20]
+}
+ 80007b2:	bf00      	nop
+ 80007b4:	bd80      	pop	{r7, pc}
+ 80007b6:	bf00      	nop
+ 80007b8:	20000020 	.word	0x20000020
+ 80007bc:	40010400 	.word	0x40010400
+
+080007c0 <H_HEATER_void_init>:
+#include	"HEATER_interface.h"
+
+
+
+void H_HEATER_void_init(void)
+{
+ 80007c0:	b580      	push	{r7, lr}
+ 80007c2:	af00      	add	r7, sp, #0
+	M_DIO_void_setPinDir(HEAT_PORT,HEAT_PIN,OUT_2MHZ_PP);
+ 80007c4:	2202      	movs	r2, #2
+ 80007c6:	210e      	movs	r1, #14
+ 80007c8:	2002      	movs	r0, #2
+ 80007ca:	f7ff fd8f 	bl	80002ec <M_DIO_void_setPinDir>
+}
+ 80007ce:	bf00      	nop
+ 80007d0:	bd80      	pop	{r7, pc}
+
+080007d2 <H_HEATER_void_start>:
+
+void H_HEATER_void_start(void)
+{
+ 80007d2:	b580      	push	{r7, lr}
+ 80007d4:	af00      	add	r7, sp, #0
+	M_DIO_void_setPinVal(HEAT_PORT,HEAT_PIN,DIO_HIGH);
+ 80007d6:	2201      	movs	r2, #1
+ 80007d8:	210e      	movs	r1, #14
+ 80007da:	2002      	movs	r0, #2
+ 80007dc:	f7ff fe5a 	bl	8000494 <M_DIO_void_setPinVal>
+}
+ 80007e0:	bf00      	nop
+ 80007e2:	bd80      	pop	{r7, pc}
+
+080007e4 <H_HEATER_void_stop>:
+
+void H_HEATER_void_stop(void)
+{
+ 80007e4:	b580      	push	{r7, lr}
+ 80007e6:	af00      	add	r7, sp, #0
+	M_DIO_void_setPinVal(HEAT_PORT,HEAT_PIN,DIO_LOW);
+ 80007e8:	2200      	movs	r2, #0
+ 80007ea:	210e      	movs	r1, #14
+ 80007ec:	2002      	movs	r0, #2
+ 80007ee:	f7ff fe51 	bl	8000494 <M_DIO_void_setPinVal>
+}
+ 80007f2:	bf00      	nop
+ 80007f4:	bd80      	pop	{r7, pc}
+	...
+
+080007f8 <NVIC_u8EnableInterrupt>:
+#include "NVIC_config.h"
+
+#define SCB_u32_AIRCR_REG                 *((volatile u32 *)(0xE000ED00 + 0x0C))
+
+u8 NVIC_u8EnableInterrupt    (u8 Copy_u8IRQN)
+{
+ 80007f8:	b480      	push	{r7}
+ 80007fa:	b085      	sub	sp, #20
+ 80007fc:	af00      	add	r7, sp, #0
+ 80007fe:	4603      	mov	r3, r0
+ 8000800:	71fb      	strb	r3, [r7, #7]
+	u8 Local_u8ErrorState = STD_TYPES_OK;
+ 8000802:	2301      	movs	r3, #1
+ 8000804:	73fb      	strb	r3, [r7, #15]
+	u8 Local_u8RegIndex,Local_u8BitNb;
+	if(Copy_u8IRQN < 240)
+ 8000806:	79fb      	ldrb	r3, [r7, #7]
+ 8000808:	2bef      	cmp	r3, #239	; 0xef
+ 800080a:	d80f      	bhi.n	800082c <NVIC_u8EnableInterrupt+0x34>
+	{
+		Local_u8RegIndex = Copy_u8IRQN / 32 ;
+ 800080c:	79fb      	ldrb	r3, [r7, #7]
+ 800080e:	095b      	lsrs	r3, r3, #5
+ 8000810:	73bb      	strb	r3, [r7, #14]
+		Local_u8BitNb    = Copy_u8IRQN % 32 ;
+ 8000812:	79fb      	ldrb	r3, [r7, #7]
+ 8000814:	f003 031f 	and.w	r3, r3, #31
+ 8000818:	737b      	strb	r3, [r7, #13]
+
+		/* Enable Peripheral Interrupt */
+		NVIC->ISER[Local_u8RegIndex] = (1<<Local_u8BitNb);
+ 800081a:	7b7b      	ldrb	r3, [r7, #13]
+ 800081c:	2201      	movs	r2, #1
+ 800081e:	fa02 f103 	lsl.w	r1, r2, r3
+ 8000822:	4a06      	ldr	r2, [pc, #24]	; (800083c <NVIC_u8EnableInterrupt+0x44>)
+ 8000824:	7bbb      	ldrb	r3, [r7, #14]
+ 8000826:	f842 1023 	str.w	r1, [r2, r3, lsl #2]
+ 800082a:	e001      	b.n	8000830 <NVIC_u8EnableInterrupt+0x38>
+	}
+	else
+	{
+		Local_u8ErrorState = STD_TYPES_NOK;
+ 800082c:	2300      	movs	r3, #0
+ 800082e:	73fb      	strb	r3, [r7, #15]
+	}
+	return Local_u8ErrorState;
+ 8000830:	7bfb      	ldrb	r3, [r7, #15]
+}
+ 8000832:	4618      	mov	r0, r3
+ 8000834:	3714      	adds	r7, #20
+ 8000836:	46bd      	mov	sp, r7
+ 8000838:	bc80      	pop	{r7}
+ 800083a:	4770      	bx	lr
+ 800083c:	e000e100 	.word	0xe000e100
+
+08000840 <MRCC_voidSysClkInit>:
+#include	"RCC_config.h"
+
+
+
+void	MRCC_voidSysClkInit(void)
+{
+ 8000840:	b480      	push	{r7}
+ 8000842:	af00      	add	r7, sp, #0
+	#if			SYSTEM_CLK	==	RCC_HSI
+				SET_BIT(RCC_CR,0);
+ 8000844:	4b0a      	ldr	r3, [pc, #40]	; (8000870 <MRCC_voidSysClkInit+0x30>)
+ 8000846:	681b      	ldr	r3, [r3, #0]
+ 8000848:	4a09      	ldr	r2, [pc, #36]	; (8000870 <MRCC_voidSysClkInit+0x30>)
+ 800084a:	f043 0301 	orr.w	r3, r3, #1
+ 800084e:	6013      	str	r3, [r2, #0]
+				CLR_BIT(RCC_CFGR,0);
+ 8000850:	4b08      	ldr	r3, [pc, #32]	; (8000874 <MRCC_voidSysClkInit+0x34>)
+ 8000852:	681b      	ldr	r3, [r3, #0]
+ 8000854:	4a07      	ldr	r2, [pc, #28]	; (8000874 <MRCC_voidSysClkInit+0x34>)
+ 8000856:	f023 0301 	bic.w	r3, r3, #1
+ 800085a:	6013      	str	r3, [r2, #0]
+				CLR_BIT(RCC_CFGR,1);
+ 800085c:	4b05      	ldr	r3, [pc, #20]	; (8000874 <MRCC_voidSysClkInit+0x34>)
+ 800085e:	681b      	ldr	r3, [r3, #0]
+ 8000860:	4a04      	ldr	r2, [pc, #16]	; (8000874 <MRCC_voidSysClkInit+0x34>)
+ 8000862:	f023 0302 	bic.w	r3, r3, #2
+ 8000866:	6013      	str	r3, [r2, #0]
+				CLR_BIT(RCC_CFGR,0);
+				SET_BIT(RCC_CFGR,1);
+	#else
+		#error	"Wrong choice of RCC clock type"
+	#endif
+}
+ 8000868:	bf00      	nop
+ 800086a:	46bd      	mov	sp, r7
+ 800086c:	bc80      	pop	{r7}
+ 800086e:	4770      	bx	lr
+ 8000870:	40021000 	.word	0x40021000
+ 8000874:	40021004 	.word	0x40021004
+
+08000878 <MRCC_voidEnablePerClk>:
+void	MRCC_voidEnablePerClk(u8 PerBus,u8 PerNum)
+{
+ 8000878:	b480      	push	{r7}
+ 800087a:	b083      	sub	sp, #12
+ 800087c:	af00      	add	r7, sp, #0
+ 800087e:	4603      	mov	r3, r0
+ 8000880:	460a      	mov	r2, r1
+ 8000882:	71fb      	strb	r3, [r7, #7]
+ 8000884:	4613      	mov	r3, r2
+ 8000886:	71bb      	strb	r3, [r7, #6]
+	/*	Range Check						*/
+	if(PerNum<32)
+ 8000888:	79bb      	ldrb	r3, [r7, #6]
+ 800088a:	2b1f      	cmp	r3, #31
+ 800088c:	d82a      	bhi.n	80008e4 <MRCC_voidEnablePerClk+0x6c>
+	{
+		switch(PerBus)
+ 800088e:	79fb      	ldrb	r3, [r7, #7]
+ 8000890:	2b02      	cmp	r3, #2
+ 8000892:	d01c      	beq.n	80008ce <MRCC_voidEnablePerClk+0x56>
+ 8000894:	2b02      	cmp	r3, #2
+ 8000896:	dc25      	bgt.n	80008e4 <MRCC_voidEnablePerClk+0x6c>
+ 8000898:	2b00      	cmp	r3, #0
+ 800089a:	d002      	beq.n	80008a2 <MRCC_voidEnablePerClk+0x2a>
+ 800089c:	2b01      	cmp	r3, #1
+ 800089e:	d00b      	beq.n	80008b8 <MRCC_voidEnablePerClk+0x40>
+			case RCC_APB2	:	SET_BIT(RCC_APB2ENR,PerNum);	break;
+		}
+	}
+	else
+	{/*		Report Error 			*/}	
+}
+ 80008a0:	e020      	b.n	80008e4 <MRCC_voidEnablePerClk+0x6c>
+			case RCC_AHB	:	SET_BIT(RCC_AHBENR ,PerNum);	break;
+ 80008a2:	4b13      	ldr	r3, [pc, #76]	; (80008f0 <MRCC_voidEnablePerClk+0x78>)
+ 80008a4:	681b      	ldr	r3, [r3, #0]
+ 80008a6:	79ba      	ldrb	r2, [r7, #6]
+ 80008a8:	2101      	movs	r1, #1
+ 80008aa:	fa01 f202 	lsl.w	r2, r1, r2
+ 80008ae:	4611      	mov	r1, r2
+ 80008b0:	4a0f      	ldr	r2, [pc, #60]	; (80008f0 <MRCC_voidEnablePerClk+0x78>)
+ 80008b2:	430b      	orrs	r3, r1
+ 80008b4:	6013      	str	r3, [r2, #0]
+ 80008b6:	e015      	b.n	80008e4 <MRCC_voidEnablePerClk+0x6c>
+			case RCC_APB1	:	SET_BIT(RCC_APB1ENR,PerNum);	break;
+ 80008b8:	4b0e      	ldr	r3, [pc, #56]	; (80008f4 <MRCC_voidEnablePerClk+0x7c>)
+ 80008ba:	681b      	ldr	r3, [r3, #0]
+ 80008bc:	79ba      	ldrb	r2, [r7, #6]
+ 80008be:	2101      	movs	r1, #1
+ 80008c0:	fa01 f202 	lsl.w	r2, r1, r2
+ 80008c4:	4611      	mov	r1, r2
+ 80008c6:	4a0b      	ldr	r2, [pc, #44]	; (80008f4 <MRCC_voidEnablePerClk+0x7c>)
+ 80008c8:	430b      	orrs	r3, r1
+ 80008ca:	6013      	str	r3, [r2, #0]
+ 80008cc:	e00a      	b.n	80008e4 <MRCC_voidEnablePerClk+0x6c>
+			case RCC_APB2	:	SET_BIT(RCC_APB2ENR,PerNum);	break;
+ 80008ce:	4b0a      	ldr	r3, [pc, #40]	; (80008f8 <MRCC_voidEnablePerClk+0x80>)
+ 80008d0:	681b      	ldr	r3, [r3, #0]
+ 80008d2:	79ba      	ldrb	r2, [r7, #6]
+ 80008d4:	2101      	movs	r1, #1
+ 80008d6:	fa01 f202 	lsl.w	r2, r1, r2
+ 80008da:	4611      	mov	r1, r2
+ 80008dc:	4a06      	ldr	r2, [pc, #24]	; (80008f8 <MRCC_voidEnablePerClk+0x80>)
+ 80008de:	430b      	orrs	r3, r1
+ 80008e0:	6013      	str	r3, [r2, #0]
+ 80008e2:	bf00      	nop
+}
+ 80008e4:	bf00      	nop
+ 80008e6:	370c      	adds	r7, #12
+ 80008e8:	46bd      	mov	sp, r7
+ 80008ea:	bc80      	pop	{r7}
+ 80008ec:	4770      	bx	lr
+ 80008ee:	bf00      	nop
+ 80008f0:	40021014 	.word	0x40021014
+ 80008f4:	4002101c 	.word	0x4002101c
+ 80008f8:	40021018 	.word	0x40021018
+
+080008fc <MRCC_voidSetADCPre>:
+	}
+	else
+	{/*		Report Error 			*/}
+}
+void	MRCC_voidSetADCPre(u8 Copy_u8Pre)
+{
+ 80008fc:	b480      	push	{r7}
+ 80008fe:	b083      	sub	sp, #12
+ 8000900:	af00      	add	r7, sp, #0
+ 8000902:	4603      	mov	r3, r0
+ 8000904:	71fb      	strb	r3, [r7, #7]
+	if(Copy_u8Pre <= RCC_ADC_PRE_8)
+ 8000906:	79fb      	ldrb	r3, [r7, #7]
+ 8000908:	2b03      	cmp	r3, #3
+ 800090a:	d813      	bhi.n	8000934 <MRCC_voidSetADCPre+0x38>
+	{
+		CLR_BIT(RCC_CFGR , 14);
+ 800090c:	4b0c      	ldr	r3, [pc, #48]	; (8000940 <MRCC_voidSetADCPre+0x44>)
+ 800090e:	681b      	ldr	r3, [r3, #0]
+ 8000910:	4a0b      	ldr	r2, [pc, #44]	; (8000940 <MRCC_voidSetADCPre+0x44>)
+ 8000912:	f423 4380 	bic.w	r3, r3, #16384	; 0x4000
+ 8000916:	6013      	str	r3, [r2, #0]
+		CLR_BIT(RCC_CFGR , 15);
+ 8000918:	4b09      	ldr	r3, [pc, #36]	; (8000940 <MRCC_voidSetADCPre+0x44>)
+ 800091a:	681b      	ldr	r3, [r3, #0]
+ 800091c:	4a08      	ldr	r2, [pc, #32]	; (8000940 <MRCC_voidSetADCPre+0x44>)
+ 800091e:	f423 4300 	bic.w	r3, r3, #32768	; 0x8000
+ 8000922:	6013      	str	r3, [r2, #0]
+		RCC_CFGR |=  Copy_u8Pre << 14;
+ 8000924:	4b06      	ldr	r3, [pc, #24]	; (8000940 <MRCC_voidSetADCPre+0x44>)
+ 8000926:	681b      	ldr	r3, [r3, #0]
+ 8000928:	79fa      	ldrb	r2, [r7, #7]
+ 800092a:	0392      	lsls	r2, r2, #14
+ 800092c:	4611      	mov	r1, r2
+ 800092e:	4a04      	ldr	r2, [pc, #16]	; (8000940 <MRCC_voidSetADCPre+0x44>)
+ 8000930:	430b      	orrs	r3, r1
+ 8000932:	6013      	str	r3, [r2, #0]
+	}
+}
+ 8000934:	bf00      	nop
+ 8000936:	370c      	adds	r7, #12
+ 8000938:	46bd      	mov	sp, r7
+ 800093a:	bc80      	pop	{r7}
+ 800093c:	4770      	bx	lr
+ 800093e:	bf00      	nop
+ 8000940:	40021004 	.word	0x40021004
+
+08000944 <_delay_ms>:
+#include"SSD_pri.h"
+#include"SSD_config.h"
+#include"SSD_int.h"
+
+static void	_delay_ms(u32 _ms)
+{
+ 8000944:	b480      	push	{r7}
+ 8000946:	b085      	sub	sp, #20
+ 8000948:	af00      	add	r7, sp, #0
+ 800094a:	6078      	str	r0, [r7, #4]
+	for(u32 i = 0; i < (_ms * 500) ; i++)
+ 800094c:	2300      	movs	r3, #0
+ 800094e:	60fb      	str	r3, [r7, #12]
+ 8000950:	e003      	b.n	800095a <_delay_ms+0x16>
+	{
+		asm("NOP");
+ 8000952:	bf00      	nop
+	for(u32 i = 0; i < (_ms * 500) ; i++)
+ 8000954:	68fb      	ldr	r3, [r7, #12]
+ 8000956:	3301      	adds	r3, #1
+ 8000958:	60fb      	str	r3, [r7, #12]
+ 800095a:	687b      	ldr	r3, [r7, #4]
+ 800095c:	f44f 72fa 	mov.w	r2, #500	; 0x1f4
+ 8000960:	fb02 f303 	mul.w	r3, r2, r3
+ 8000964:	68fa      	ldr	r2, [r7, #12]
+ 8000966:	429a      	cmp	r2, r3
+ 8000968:	d3f3      	bcc.n	8000952 <_delay_ms+0xe>
+	}
+}
+ 800096a:	bf00      	nop
+ 800096c:	bf00      	nop
+ 800096e:	3714      	adds	r7, #20
+ 8000970:	46bd      	mov	sp, r7
+ 8000972:	bc80      	pop	{r7}
+ 8000974:	4770      	bx	lr
+
+08000976 <H_SSD_Void_init>:
+
+void H_SSD_Void_init(void)
+{
+ 8000976:	b580      	push	{r7, lr}
+ 8000978:	af00      	add	r7, sp, #0
+	//set all SSD pins as output
+	M_DIO_void_setPinDir(SSD_LED_A_PORT, SSD_LED_A_PIN, OUT_2MHZ_PP) ;
+ 800097a:	2202      	movs	r2, #2
+ 800097c:	2104      	movs	r1, #4
+ 800097e:	2000      	movs	r0, #0
+ 8000980:	f7ff fcb4 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinDir(SSD_LED_B_PORT, SSD_LED_B_PIN, OUT_2MHZ_PP) ;
+ 8000984:	2202      	movs	r2, #2
+ 8000986:	2105      	movs	r1, #5
+ 8000988:	2000      	movs	r0, #0
+ 800098a:	f7ff fcaf 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinDir(SSD_LED_C_PORT, SSD_LED_C_PIN, OUT_2MHZ_PP) ;
+ 800098e:	2202      	movs	r2, #2
+ 8000990:	2106      	movs	r1, #6
+ 8000992:	2000      	movs	r0, #0
+ 8000994:	f7ff fcaa 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinDir(SSD_LED_D_PORT, SSD_LED_D_PIN, OUT_2MHZ_PP) ;
+ 8000998:	2202      	movs	r2, #2
+ 800099a:	2107      	movs	r1, #7
+ 800099c:	2000      	movs	r0, #0
+ 800099e:	f7ff fca5 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinDir(SSD_LED_E_PORT, SSD_LED_E_PIN, OUT_2MHZ_PP) ;
+ 80009a2:	2202      	movs	r2, #2
+ 80009a4:	2108      	movs	r1, #8
+ 80009a6:	2000      	movs	r0, #0
+ 80009a8:	f7ff fca0 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinDir(SSD_LED_F_PORT, SSD_LED_F_PIN, OUT_2MHZ_PP) ;
+ 80009ac:	2202      	movs	r2, #2
+ 80009ae:	2109      	movs	r1, #9
+ 80009b0:	2000      	movs	r0, #0
+ 80009b2:	f7ff fc9b 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinDir(SSD_LED_G_PORT, SSD_LED_G_PIN, OUT_2MHZ_PP) ;
+ 80009b6:	2202      	movs	r2, #2
+ 80009b8:	210a      	movs	r1, #10
+ 80009ba:	2000      	movs	r0, #0
+ 80009bc:	f7ff fc96 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinDir(SSD_LED_DOT_PORT, SSD_LED_DOT_PIN, OUT_2MHZ_PP) ;
+ 80009c0:	2202      	movs	r2, #2
+ 80009c2:	210d      	movs	r1, #13
+ 80009c4:	2000      	movs	r0, #0
+ 80009c6:	f7ff fc91 	bl	80002ec <M_DIO_void_setPinDir>
+
+	//set enable pins at output
+	M_DIO_void_setPinDir(SSD_DIG_1_EN_PORT, SSD_DIG_1_EN_PIN, OUT_2MHZ_PP) ;
+ 80009ca:	2202      	movs	r2, #2
+ 80009cc:	210b      	movs	r1, #11
+ 80009ce:	2000      	movs	r0, #0
+ 80009d0:	f7ff fc8c 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinDir(SSD_DIG_2_EN_PORT, SSD_DIG_2_EN_PIN, OUT_2MHZ_PP) ;
+ 80009d4:	2202      	movs	r2, #2
+ 80009d6:	210c      	movs	r1, #12
+ 80009d8:	2000      	movs	r0, #0
+ 80009da:	f7ff fc87 	bl	80002ec <M_DIO_void_setPinDir>
+
+}
+ 80009de:	bf00      	nop
+ 80009e0:	bd80      	pop	{r7, pc}
+	...
+
+080009e4 <H_SSD_Void_DisplayNumber>:
+
+
+void H_SSD_Void_DisplayNumber(u8 number)
+{
+ 80009e4:	b580      	push	{r7, lr}
+ 80009e6:	b084      	sub	sp, #16
+ 80009e8:	af00      	add	r7, sp, #0
+ 80009ea:	4603      	mov	r3, r0
+ 80009ec:	71fb      	strb	r3, [r7, #7]
+	if(number>99)
+ 80009ee:	79fb      	ldrb	r3, [r7, #7]
+ 80009f0:	2b63      	cmp	r3, #99	; 0x63
+ 80009f2:	f200 8343 	bhi.w	800107c <H_SSD_Void_DisplayNumber+0x698>
+	{
+		return ;
+	}
+
+	u8 uints = number % 10 ;
+ 80009f6:	79fa      	ldrb	r2, [r7, #7]
+ 80009f8:	4bf0      	ldr	r3, [pc, #960]	; (8000dbc <H_SSD_Void_DisplayNumber+0x3d8>)
+ 80009fa:	fba3 1302 	umull	r1, r3, r3, r2
+ 80009fe:	08d9      	lsrs	r1, r3, #3
+ 8000a00:	460b      	mov	r3, r1
+ 8000a02:	009b      	lsls	r3, r3, #2
+ 8000a04:	440b      	add	r3, r1
+ 8000a06:	005b      	lsls	r3, r3, #1
+ 8000a08:	1ad3      	subs	r3, r2, r3
+ 8000a0a:	72fb      	strb	r3, [r7, #11]
+	u8 tens = number / 10 ;
+ 8000a0c:	79fb      	ldrb	r3, [r7, #7]
+ 8000a0e:	4aeb      	ldr	r2, [pc, #940]	; (8000dbc <H_SSD_Void_DisplayNumber+0x3d8>)
+ 8000a10:	fba2 2303 	umull	r2, r3, r2, r3
+ 8000a14:	08db      	lsrs	r3, r3, #3
+ 8000a16:	72bb      	strb	r3, [r7, #10]
+	u32 i ;
+
+	for(i=0;i<SSD_DISPLAY_TIME;i++)
+ 8000a18:	2300      	movs	r3, #0
+ 8000a1a:	60fb      	str	r3, [r7, #12]
+ 8000a1c:	e329      	b.n	8001072 <H_SSD_Void_DisplayNumber+0x68e>
+	{
+		switch(uints)
+ 8000a1e:	7afb      	ldrb	r3, [r7, #11]
+ 8000a20:	2b09      	cmp	r3, #9
+ 8000a22:	f200 817f 	bhi.w	8000d24 <H_SSD_Void_DisplayNumber+0x340>
+ 8000a26:	a201      	add	r2, pc, #4	; (adr r2, 8000a2c <H_SSD_Void_DisplayNumber+0x48>)
+ 8000a28:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 8000a2c:	08000a55 	.word	0x08000a55
+ 8000a30:	08000a9d 	.word	0x08000a9d
+ 8000a34:	08000ae5 	.word	0x08000ae5
+ 8000a38:	08000b2d 	.word	0x08000b2d
+ 8000a3c:	08000b75 	.word	0x08000b75
+ 8000a40:	08000bbd 	.word	0x08000bbd
+ 8000a44:	08000c05 	.word	0x08000c05
+ 8000a48:	08000c4d 	.word	0x08000c4d
+ 8000a4c:	08000c95 	.word	0x08000c95
+ 8000a50:	08000cdd 	.word	0x08000cdd
+		{
+		case 0:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000a54:	2201      	movs	r2, #1
+ 8000a56:	2104      	movs	r1, #4
+ 8000a58:	2000      	movs	r0, #0
+ 8000a5a:	f7ff fd1b 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000a5e:	2201      	movs	r2, #1
+ 8000a60:	2105      	movs	r1, #5
+ 8000a62:	2000      	movs	r0, #0
+ 8000a64:	f7ff fd16 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000a68:	2201      	movs	r2, #1
+ 8000a6a:	2106      	movs	r1, #6
+ 8000a6c:	2000      	movs	r0, #0
+ 8000a6e:	f7ff fd11 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000a72:	2201      	movs	r2, #1
+ 8000a74:	2107      	movs	r1, #7
+ 8000a76:	2000      	movs	r0, #0
+ 8000a78:	f7ff fd0c 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_HIGH) ;
+ 8000a7c:	2201      	movs	r2, #1
+ 8000a7e:	2108      	movs	r1, #8
+ 8000a80:	2000      	movs	r0, #0
+ 8000a82:	f7ff fd07 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8000a86:	2201      	movs	r2, #1
+ 8000a88:	2109      	movs	r1, #9
+ 8000a8a:	2000      	movs	r0, #0
+ 8000a8c:	f7ff fd02 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_LOW) ;
+ 8000a90:	2200      	movs	r2, #0
+ 8000a92:	210a      	movs	r1, #10
+ 8000a94:	2000      	movs	r0, #0
+ 8000a96:	f7ff fcfd 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000a9a:	e143      	b.n	8000d24 <H_SSD_Void_DisplayNumber+0x340>
+		case 1:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_LOW) ;
+ 8000a9c:	2200      	movs	r2, #0
+ 8000a9e:	2104      	movs	r1, #4
+ 8000aa0:	2000      	movs	r0, #0
+ 8000aa2:	f7ff fcf7 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000aa6:	2201      	movs	r2, #1
+ 8000aa8:	2105      	movs	r1, #5
+ 8000aaa:	2000      	movs	r0, #0
+ 8000aac:	f7ff fcf2 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000ab0:	2201      	movs	r2, #1
+ 8000ab2:	2106      	movs	r1, #6
+ 8000ab4:	2000      	movs	r0, #0
+ 8000ab6:	f7ff fced 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_LOW) ;
+ 8000aba:	2200      	movs	r2, #0
+ 8000abc:	2107      	movs	r1, #7
+ 8000abe:	2000      	movs	r0, #0
+ 8000ac0:	f7ff fce8 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8000ac4:	2200      	movs	r2, #0
+ 8000ac6:	2108      	movs	r1, #8
+ 8000ac8:	2000      	movs	r0, #0
+ 8000aca:	f7ff fce3 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_LOW) ;
+ 8000ace:	2200      	movs	r2, #0
+ 8000ad0:	2109      	movs	r1, #9
+ 8000ad2:	2000      	movs	r0, #0
+ 8000ad4:	f7ff fcde 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_LOW) ;
+ 8000ad8:	2200      	movs	r2, #0
+ 8000ada:	210a      	movs	r1, #10
+ 8000adc:	2000      	movs	r0, #0
+ 8000ade:	f7ff fcd9 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000ae2:	e11f      	b.n	8000d24 <H_SSD_Void_DisplayNumber+0x340>
+		case 2:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000ae4:	2201      	movs	r2, #1
+ 8000ae6:	2104      	movs	r1, #4
+ 8000ae8:	2000      	movs	r0, #0
+ 8000aea:	f7ff fcd3 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000aee:	2201      	movs	r2, #1
+ 8000af0:	2105      	movs	r1, #5
+ 8000af2:	2000      	movs	r0, #0
+ 8000af4:	f7ff fcce 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_LOW) ;
+ 8000af8:	2200      	movs	r2, #0
+ 8000afa:	2106      	movs	r1, #6
+ 8000afc:	2000      	movs	r0, #0
+ 8000afe:	f7ff fcc9 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000b02:	2201      	movs	r2, #1
+ 8000b04:	2107      	movs	r1, #7
+ 8000b06:	2000      	movs	r0, #0
+ 8000b08:	f7ff fcc4 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_HIGH) ;
+ 8000b0c:	2201      	movs	r2, #1
+ 8000b0e:	2108      	movs	r1, #8
+ 8000b10:	2000      	movs	r0, #0
+ 8000b12:	f7ff fcbf 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_LOW) ;
+ 8000b16:	2200      	movs	r2, #0
+ 8000b18:	2109      	movs	r1, #9
+ 8000b1a:	2000      	movs	r0, #0
+ 8000b1c:	f7ff fcba 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000b20:	2201      	movs	r2, #1
+ 8000b22:	210a      	movs	r1, #10
+ 8000b24:	2000      	movs	r0, #0
+ 8000b26:	f7ff fcb5 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000b2a:	e0fb      	b.n	8000d24 <H_SSD_Void_DisplayNumber+0x340>
+		case 3:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000b2c:	2201      	movs	r2, #1
+ 8000b2e:	2104      	movs	r1, #4
+ 8000b30:	2000      	movs	r0, #0
+ 8000b32:	f7ff fcaf 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000b36:	2201      	movs	r2, #1
+ 8000b38:	2105      	movs	r1, #5
+ 8000b3a:	2000      	movs	r0, #0
+ 8000b3c:	f7ff fcaa 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000b40:	2201      	movs	r2, #1
+ 8000b42:	2106      	movs	r1, #6
+ 8000b44:	2000      	movs	r0, #0
+ 8000b46:	f7ff fca5 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000b4a:	2201      	movs	r2, #1
+ 8000b4c:	2107      	movs	r1, #7
+ 8000b4e:	2000      	movs	r0, #0
+ 8000b50:	f7ff fca0 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8000b54:	2200      	movs	r2, #0
+ 8000b56:	2108      	movs	r1, #8
+ 8000b58:	2000      	movs	r0, #0
+ 8000b5a:	f7ff fc9b 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_LOW) ;
+ 8000b5e:	2200      	movs	r2, #0
+ 8000b60:	2109      	movs	r1, #9
+ 8000b62:	2000      	movs	r0, #0
+ 8000b64:	f7ff fc96 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000b68:	2201      	movs	r2, #1
+ 8000b6a:	210a      	movs	r1, #10
+ 8000b6c:	2000      	movs	r0, #0
+ 8000b6e:	f7ff fc91 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000b72:	e0d7      	b.n	8000d24 <H_SSD_Void_DisplayNumber+0x340>
+		case 4:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_LOW) ;
+ 8000b74:	2200      	movs	r2, #0
+ 8000b76:	2104      	movs	r1, #4
+ 8000b78:	2000      	movs	r0, #0
+ 8000b7a:	f7ff fc8b 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000b7e:	2201      	movs	r2, #1
+ 8000b80:	2105      	movs	r1, #5
+ 8000b82:	2000      	movs	r0, #0
+ 8000b84:	f7ff fc86 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000b88:	2201      	movs	r2, #1
+ 8000b8a:	2106      	movs	r1, #6
+ 8000b8c:	2000      	movs	r0, #0
+ 8000b8e:	f7ff fc81 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_LOW) ;
+ 8000b92:	2200      	movs	r2, #0
+ 8000b94:	2107      	movs	r1, #7
+ 8000b96:	2000      	movs	r0, #0
+ 8000b98:	f7ff fc7c 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8000b9c:	2200      	movs	r2, #0
+ 8000b9e:	2108      	movs	r1, #8
+ 8000ba0:	2000      	movs	r0, #0
+ 8000ba2:	f7ff fc77 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8000ba6:	2201      	movs	r2, #1
+ 8000ba8:	2109      	movs	r1, #9
+ 8000baa:	2000      	movs	r0, #0
+ 8000bac:	f7ff fc72 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000bb0:	2201      	movs	r2, #1
+ 8000bb2:	210a      	movs	r1, #10
+ 8000bb4:	2000      	movs	r0, #0
+ 8000bb6:	f7ff fc6d 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000bba:	e0b3      	b.n	8000d24 <H_SSD_Void_DisplayNumber+0x340>
+		case 5:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000bbc:	2201      	movs	r2, #1
+ 8000bbe:	2104      	movs	r1, #4
+ 8000bc0:	2000      	movs	r0, #0
+ 8000bc2:	f7ff fc67 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_LOW) ;
+ 8000bc6:	2200      	movs	r2, #0
+ 8000bc8:	2105      	movs	r1, #5
+ 8000bca:	2000      	movs	r0, #0
+ 8000bcc:	f7ff fc62 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000bd0:	2201      	movs	r2, #1
+ 8000bd2:	2106      	movs	r1, #6
+ 8000bd4:	2000      	movs	r0, #0
+ 8000bd6:	f7ff fc5d 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000bda:	2201      	movs	r2, #1
+ 8000bdc:	2107      	movs	r1, #7
+ 8000bde:	2000      	movs	r0, #0
+ 8000be0:	f7ff fc58 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8000be4:	2200      	movs	r2, #0
+ 8000be6:	2108      	movs	r1, #8
+ 8000be8:	2000      	movs	r0, #0
+ 8000bea:	f7ff fc53 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8000bee:	2201      	movs	r2, #1
+ 8000bf0:	2109      	movs	r1, #9
+ 8000bf2:	2000      	movs	r0, #0
+ 8000bf4:	f7ff fc4e 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000bf8:	2201      	movs	r2, #1
+ 8000bfa:	210a      	movs	r1, #10
+ 8000bfc:	2000      	movs	r0, #0
+ 8000bfe:	f7ff fc49 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000c02:	e08f      	b.n	8000d24 <H_SSD_Void_DisplayNumber+0x340>
+		case 6:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000c04:	2201      	movs	r2, #1
+ 8000c06:	2104      	movs	r1, #4
+ 8000c08:	2000      	movs	r0, #0
+ 8000c0a:	f7ff fc43 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_LOW) ;
+ 8000c0e:	2200      	movs	r2, #0
+ 8000c10:	2105      	movs	r1, #5
+ 8000c12:	2000      	movs	r0, #0
+ 8000c14:	f7ff fc3e 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000c18:	2201      	movs	r2, #1
+ 8000c1a:	2106      	movs	r1, #6
+ 8000c1c:	2000      	movs	r0, #0
+ 8000c1e:	f7ff fc39 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000c22:	2201      	movs	r2, #1
+ 8000c24:	2107      	movs	r1, #7
+ 8000c26:	2000      	movs	r0, #0
+ 8000c28:	f7ff fc34 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_HIGH) ;
+ 8000c2c:	2201      	movs	r2, #1
+ 8000c2e:	2108      	movs	r1, #8
+ 8000c30:	2000      	movs	r0, #0
+ 8000c32:	f7ff fc2f 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8000c36:	2201      	movs	r2, #1
+ 8000c38:	2109      	movs	r1, #9
+ 8000c3a:	2000      	movs	r0, #0
+ 8000c3c:	f7ff fc2a 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000c40:	2201      	movs	r2, #1
+ 8000c42:	210a      	movs	r1, #10
+ 8000c44:	2000      	movs	r0, #0
+ 8000c46:	f7ff fc25 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000c4a:	e06b      	b.n	8000d24 <H_SSD_Void_DisplayNumber+0x340>
+		case 7:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000c4c:	2201      	movs	r2, #1
+ 8000c4e:	2104      	movs	r1, #4
+ 8000c50:	2000      	movs	r0, #0
+ 8000c52:	f7ff fc1f 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000c56:	2201      	movs	r2, #1
+ 8000c58:	2105      	movs	r1, #5
+ 8000c5a:	2000      	movs	r0, #0
+ 8000c5c:	f7ff fc1a 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000c60:	2201      	movs	r2, #1
+ 8000c62:	2106      	movs	r1, #6
+ 8000c64:	2000      	movs	r0, #0
+ 8000c66:	f7ff fc15 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_LOW) ;
+ 8000c6a:	2200      	movs	r2, #0
+ 8000c6c:	2107      	movs	r1, #7
+ 8000c6e:	2000      	movs	r0, #0
+ 8000c70:	f7ff fc10 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8000c74:	2200      	movs	r2, #0
+ 8000c76:	2108      	movs	r1, #8
+ 8000c78:	2000      	movs	r0, #0
+ 8000c7a:	f7ff fc0b 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_LOW) ;
+ 8000c7e:	2200      	movs	r2, #0
+ 8000c80:	2109      	movs	r1, #9
+ 8000c82:	2000      	movs	r0, #0
+ 8000c84:	f7ff fc06 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_LOW) ;
+ 8000c88:	2200      	movs	r2, #0
+ 8000c8a:	210a      	movs	r1, #10
+ 8000c8c:	2000      	movs	r0, #0
+ 8000c8e:	f7ff fc01 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000c92:	e047      	b.n	8000d24 <H_SSD_Void_DisplayNumber+0x340>
+		case 8:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000c94:	2201      	movs	r2, #1
+ 8000c96:	2104      	movs	r1, #4
+ 8000c98:	2000      	movs	r0, #0
+ 8000c9a:	f7ff fbfb 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000c9e:	2201      	movs	r2, #1
+ 8000ca0:	2105      	movs	r1, #5
+ 8000ca2:	2000      	movs	r0, #0
+ 8000ca4:	f7ff fbf6 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000ca8:	2201      	movs	r2, #1
+ 8000caa:	2106      	movs	r1, #6
+ 8000cac:	2000      	movs	r0, #0
+ 8000cae:	f7ff fbf1 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000cb2:	2201      	movs	r2, #1
+ 8000cb4:	2107      	movs	r1, #7
+ 8000cb6:	2000      	movs	r0, #0
+ 8000cb8:	f7ff fbec 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_HIGH) ;
+ 8000cbc:	2201      	movs	r2, #1
+ 8000cbe:	2108      	movs	r1, #8
+ 8000cc0:	2000      	movs	r0, #0
+ 8000cc2:	f7ff fbe7 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8000cc6:	2201      	movs	r2, #1
+ 8000cc8:	2109      	movs	r1, #9
+ 8000cca:	2000      	movs	r0, #0
+ 8000ccc:	f7ff fbe2 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000cd0:	2201      	movs	r2, #1
+ 8000cd2:	210a      	movs	r1, #10
+ 8000cd4:	2000      	movs	r0, #0
+ 8000cd6:	f7ff fbdd 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000cda:	e023      	b.n	8000d24 <H_SSD_Void_DisplayNumber+0x340>
+		case 9:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000cdc:	2201      	movs	r2, #1
+ 8000cde:	2104      	movs	r1, #4
+ 8000ce0:	2000      	movs	r0, #0
+ 8000ce2:	f7ff fbd7 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000ce6:	2201      	movs	r2, #1
+ 8000ce8:	2105      	movs	r1, #5
+ 8000cea:	2000      	movs	r0, #0
+ 8000cec:	f7ff fbd2 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000cf0:	2201      	movs	r2, #1
+ 8000cf2:	2106      	movs	r1, #6
+ 8000cf4:	2000      	movs	r0, #0
+ 8000cf6:	f7ff fbcd 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000cfa:	2201      	movs	r2, #1
+ 8000cfc:	2107      	movs	r1, #7
+ 8000cfe:	2000      	movs	r0, #0
+ 8000d00:	f7ff fbc8 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8000d04:	2200      	movs	r2, #0
+ 8000d06:	2108      	movs	r1, #8
+ 8000d08:	2000      	movs	r0, #0
+ 8000d0a:	f7ff fbc3 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8000d0e:	2201      	movs	r2, #1
+ 8000d10:	2109      	movs	r1, #9
+ 8000d12:	2000      	movs	r0, #0
+ 8000d14:	f7ff fbbe 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000d18:	2201      	movs	r2, #1
+ 8000d1a:	210a      	movs	r1, #10
+ 8000d1c:	2000      	movs	r0, #0
+ 8000d1e:	f7ff fbb9 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000d22:	bf00      	nop
+		}
+
+		// enable DIG 1 (units)
+		M_DIO_void_setPinVal(SSD_DIG_1_EN_PORT, SSD_DIG_1_EN_PIN,DIO_LOW  ) ;
+ 8000d24:	2200      	movs	r2, #0
+ 8000d26:	210b      	movs	r1, #11
+ 8000d28:	2000      	movs	r0, #0
+ 8000d2a:	f7ff fbb3 	bl	8000494 <M_DIO_void_setPinVal>
+		// disable DIG 2 (tens)
+		M_DIO_void_setPinVal(SSD_DIG_2_EN_PORT, SSD_DIG_2_EN_PIN,DIO_HIGH ) ;
+ 8000d2e:	2201      	movs	r2, #1
+ 8000d30:	210c      	movs	r1, #12
+ 8000d32:	2000      	movs	r0, #0
+ 8000d34:	f7ff fbae 	bl	8000494 <M_DIO_void_setPinVal>
+		//delay
+		_delay_ms(10) ;
+ 8000d38:	200a      	movs	r0, #10
+ 8000d3a:	f7ff fe03 	bl	8000944 <_delay_ms>
+		// disable DIG 1 (units)
+		//M_DIO_void_setPinVal(SSD_DIG_1_EN_PORT, SSD_DIG_1_EN_PIN, DIO_HIGH) ;
+
+		switch(tens)
+ 8000d3e:	7abb      	ldrb	r3, [r7, #10]
+ 8000d40:	2b09      	cmp	r3, #9
+ 8000d42:	f200 8181 	bhi.w	8001048 <H_SSD_Void_DisplayNumber+0x664>
+ 8000d46:	a201      	add	r2, pc, #4	; (adr r2, 8000d4c <H_SSD_Void_DisplayNumber+0x368>)
+ 8000d48:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 8000d4c:	08000d75 	.word	0x08000d75
+ 8000d50:	08000dc1 	.word	0x08000dc1
+ 8000d54:	08000e09 	.word	0x08000e09
+ 8000d58:	08000e51 	.word	0x08000e51
+ 8000d5c:	08000e99 	.word	0x08000e99
+ 8000d60:	08000ee1 	.word	0x08000ee1
+ 8000d64:	08000f29 	.word	0x08000f29
+ 8000d68:	08000f71 	.word	0x08000f71
+ 8000d6c:	08000fb9 	.word	0x08000fb9
+ 8000d70:	08001001 	.word	0x08001001
+		{
+		case 0:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000d74:	2201      	movs	r2, #1
+ 8000d76:	2104      	movs	r1, #4
+ 8000d78:	2000      	movs	r0, #0
+ 8000d7a:	f7ff fb8b 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000d7e:	2201      	movs	r2, #1
+ 8000d80:	2105      	movs	r1, #5
+ 8000d82:	2000      	movs	r0, #0
+ 8000d84:	f7ff fb86 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000d88:	2201      	movs	r2, #1
+ 8000d8a:	2106      	movs	r1, #6
+ 8000d8c:	2000      	movs	r0, #0
+ 8000d8e:	f7ff fb81 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000d92:	2201      	movs	r2, #1
+ 8000d94:	2107      	movs	r1, #7
+ 8000d96:	2000      	movs	r0, #0
+ 8000d98:	f7ff fb7c 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_HIGH) ;
+ 8000d9c:	2201      	movs	r2, #1
+ 8000d9e:	2108      	movs	r1, #8
+ 8000da0:	2000      	movs	r0, #0
+ 8000da2:	f7ff fb77 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8000da6:	2201      	movs	r2, #1
+ 8000da8:	2109      	movs	r1, #9
+ 8000daa:	2000      	movs	r0, #0
+ 8000dac:	f7ff fb72 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_LOW) ;
+ 8000db0:	2200      	movs	r2, #0
+ 8000db2:	210a      	movs	r1, #10
+ 8000db4:	2000      	movs	r0, #0
+ 8000db6:	f7ff fb6d 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000dba:	e145      	b.n	8001048 <H_SSD_Void_DisplayNumber+0x664>
+ 8000dbc:	cccccccd 	.word	0xcccccccd
+		case 1:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_LOW) ;
+ 8000dc0:	2200      	movs	r2, #0
+ 8000dc2:	2104      	movs	r1, #4
+ 8000dc4:	2000      	movs	r0, #0
+ 8000dc6:	f7ff fb65 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000dca:	2201      	movs	r2, #1
+ 8000dcc:	2105      	movs	r1, #5
+ 8000dce:	2000      	movs	r0, #0
+ 8000dd0:	f7ff fb60 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000dd4:	2201      	movs	r2, #1
+ 8000dd6:	2106      	movs	r1, #6
+ 8000dd8:	2000      	movs	r0, #0
+ 8000dda:	f7ff fb5b 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_LOW) ;
+ 8000dde:	2200      	movs	r2, #0
+ 8000de0:	2107      	movs	r1, #7
+ 8000de2:	2000      	movs	r0, #0
+ 8000de4:	f7ff fb56 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8000de8:	2200      	movs	r2, #0
+ 8000dea:	2108      	movs	r1, #8
+ 8000dec:	2000      	movs	r0, #0
+ 8000dee:	f7ff fb51 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_LOW) ;
+ 8000df2:	2200      	movs	r2, #0
+ 8000df4:	2109      	movs	r1, #9
+ 8000df6:	2000      	movs	r0, #0
+ 8000df8:	f7ff fb4c 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_LOW) ;
+ 8000dfc:	2200      	movs	r2, #0
+ 8000dfe:	210a      	movs	r1, #10
+ 8000e00:	2000      	movs	r0, #0
+ 8000e02:	f7ff fb47 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000e06:	e11f      	b.n	8001048 <H_SSD_Void_DisplayNumber+0x664>
+		case 2:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000e08:	2201      	movs	r2, #1
+ 8000e0a:	2104      	movs	r1, #4
+ 8000e0c:	2000      	movs	r0, #0
+ 8000e0e:	f7ff fb41 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000e12:	2201      	movs	r2, #1
+ 8000e14:	2105      	movs	r1, #5
+ 8000e16:	2000      	movs	r0, #0
+ 8000e18:	f7ff fb3c 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_LOW) ;
+ 8000e1c:	2200      	movs	r2, #0
+ 8000e1e:	2106      	movs	r1, #6
+ 8000e20:	2000      	movs	r0, #0
+ 8000e22:	f7ff fb37 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000e26:	2201      	movs	r2, #1
+ 8000e28:	2107      	movs	r1, #7
+ 8000e2a:	2000      	movs	r0, #0
+ 8000e2c:	f7ff fb32 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_HIGH) ;
+ 8000e30:	2201      	movs	r2, #1
+ 8000e32:	2108      	movs	r1, #8
+ 8000e34:	2000      	movs	r0, #0
+ 8000e36:	f7ff fb2d 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_LOW) ;
+ 8000e3a:	2200      	movs	r2, #0
+ 8000e3c:	2109      	movs	r1, #9
+ 8000e3e:	2000      	movs	r0, #0
+ 8000e40:	f7ff fb28 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000e44:	2201      	movs	r2, #1
+ 8000e46:	210a      	movs	r1, #10
+ 8000e48:	2000      	movs	r0, #0
+ 8000e4a:	f7ff fb23 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000e4e:	e0fb      	b.n	8001048 <H_SSD_Void_DisplayNumber+0x664>
+		case 3:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000e50:	2201      	movs	r2, #1
+ 8000e52:	2104      	movs	r1, #4
+ 8000e54:	2000      	movs	r0, #0
+ 8000e56:	f7ff fb1d 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000e5a:	2201      	movs	r2, #1
+ 8000e5c:	2105      	movs	r1, #5
+ 8000e5e:	2000      	movs	r0, #0
+ 8000e60:	f7ff fb18 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000e64:	2201      	movs	r2, #1
+ 8000e66:	2106      	movs	r1, #6
+ 8000e68:	2000      	movs	r0, #0
+ 8000e6a:	f7ff fb13 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000e6e:	2201      	movs	r2, #1
+ 8000e70:	2107      	movs	r1, #7
+ 8000e72:	2000      	movs	r0, #0
+ 8000e74:	f7ff fb0e 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8000e78:	2200      	movs	r2, #0
+ 8000e7a:	2108      	movs	r1, #8
+ 8000e7c:	2000      	movs	r0, #0
+ 8000e7e:	f7ff fb09 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_LOW) ;
+ 8000e82:	2200      	movs	r2, #0
+ 8000e84:	2109      	movs	r1, #9
+ 8000e86:	2000      	movs	r0, #0
+ 8000e88:	f7ff fb04 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000e8c:	2201      	movs	r2, #1
+ 8000e8e:	210a      	movs	r1, #10
+ 8000e90:	2000      	movs	r0, #0
+ 8000e92:	f7ff faff 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000e96:	e0d7      	b.n	8001048 <H_SSD_Void_DisplayNumber+0x664>
+		case 4:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_LOW) ;
+ 8000e98:	2200      	movs	r2, #0
+ 8000e9a:	2104      	movs	r1, #4
+ 8000e9c:	2000      	movs	r0, #0
+ 8000e9e:	f7ff faf9 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000ea2:	2201      	movs	r2, #1
+ 8000ea4:	2105      	movs	r1, #5
+ 8000ea6:	2000      	movs	r0, #0
+ 8000ea8:	f7ff faf4 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000eac:	2201      	movs	r2, #1
+ 8000eae:	2106      	movs	r1, #6
+ 8000eb0:	2000      	movs	r0, #0
+ 8000eb2:	f7ff faef 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_LOW) ;
+ 8000eb6:	2200      	movs	r2, #0
+ 8000eb8:	2107      	movs	r1, #7
+ 8000eba:	2000      	movs	r0, #0
+ 8000ebc:	f7ff faea 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8000ec0:	2200      	movs	r2, #0
+ 8000ec2:	2108      	movs	r1, #8
+ 8000ec4:	2000      	movs	r0, #0
+ 8000ec6:	f7ff fae5 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8000eca:	2201      	movs	r2, #1
+ 8000ecc:	2109      	movs	r1, #9
+ 8000ece:	2000      	movs	r0, #0
+ 8000ed0:	f7ff fae0 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000ed4:	2201      	movs	r2, #1
+ 8000ed6:	210a      	movs	r1, #10
+ 8000ed8:	2000      	movs	r0, #0
+ 8000eda:	f7ff fadb 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000ede:	e0b3      	b.n	8001048 <H_SSD_Void_DisplayNumber+0x664>
+		case 5:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000ee0:	2201      	movs	r2, #1
+ 8000ee2:	2104      	movs	r1, #4
+ 8000ee4:	2000      	movs	r0, #0
+ 8000ee6:	f7ff fad5 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_LOW) ;
+ 8000eea:	2200      	movs	r2, #0
+ 8000eec:	2105      	movs	r1, #5
+ 8000eee:	2000      	movs	r0, #0
+ 8000ef0:	f7ff fad0 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000ef4:	2201      	movs	r2, #1
+ 8000ef6:	2106      	movs	r1, #6
+ 8000ef8:	2000      	movs	r0, #0
+ 8000efa:	f7ff facb 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000efe:	2201      	movs	r2, #1
+ 8000f00:	2107      	movs	r1, #7
+ 8000f02:	2000      	movs	r0, #0
+ 8000f04:	f7ff fac6 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8000f08:	2200      	movs	r2, #0
+ 8000f0a:	2108      	movs	r1, #8
+ 8000f0c:	2000      	movs	r0, #0
+ 8000f0e:	f7ff fac1 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8000f12:	2201      	movs	r2, #1
+ 8000f14:	2109      	movs	r1, #9
+ 8000f16:	2000      	movs	r0, #0
+ 8000f18:	f7ff fabc 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000f1c:	2201      	movs	r2, #1
+ 8000f1e:	210a      	movs	r1, #10
+ 8000f20:	2000      	movs	r0, #0
+ 8000f22:	f7ff fab7 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000f26:	e08f      	b.n	8001048 <H_SSD_Void_DisplayNumber+0x664>
+		case 6:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000f28:	2201      	movs	r2, #1
+ 8000f2a:	2104      	movs	r1, #4
+ 8000f2c:	2000      	movs	r0, #0
+ 8000f2e:	f7ff fab1 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_LOW) ;
+ 8000f32:	2200      	movs	r2, #0
+ 8000f34:	2105      	movs	r1, #5
+ 8000f36:	2000      	movs	r0, #0
+ 8000f38:	f7ff faac 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000f3c:	2201      	movs	r2, #1
+ 8000f3e:	2106      	movs	r1, #6
+ 8000f40:	2000      	movs	r0, #0
+ 8000f42:	f7ff faa7 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000f46:	2201      	movs	r2, #1
+ 8000f48:	2107      	movs	r1, #7
+ 8000f4a:	2000      	movs	r0, #0
+ 8000f4c:	f7ff faa2 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_HIGH) ;
+ 8000f50:	2201      	movs	r2, #1
+ 8000f52:	2108      	movs	r1, #8
+ 8000f54:	2000      	movs	r0, #0
+ 8000f56:	f7ff fa9d 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8000f5a:	2201      	movs	r2, #1
+ 8000f5c:	2109      	movs	r1, #9
+ 8000f5e:	2000      	movs	r0, #0
+ 8000f60:	f7ff fa98 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000f64:	2201      	movs	r2, #1
+ 8000f66:	210a      	movs	r1, #10
+ 8000f68:	2000      	movs	r0, #0
+ 8000f6a:	f7ff fa93 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000f6e:	e06b      	b.n	8001048 <H_SSD_Void_DisplayNumber+0x664>
+		case 7:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000f70:	2201      	movs	r2, #1
+ 8000f72:	2104      	movs	r1, #4
+ 8000f74:	2000      	movs	r0, #0
+ 8000f76:	f7ff fa8d 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000f7a:	2201      	movs	r2, #1
+ 8000f7c:	2105      	movs	r1, #5
+ 8000f7e:	2000      	movs	r0, #0
+ 8000f80:	f7ff fa88 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000f84:	2201      	movs	r2, #1
+ 8000f86:	2106      	movs	r1, #6
+ 8000f88:	2000      	movs	r0, #0
+ 8000f8a:	f7ff fa83 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_LOW) ;
+ 8000f8e:	2200      	movs	r2, #0
+ 8000f90:	2107      	movs	r1, #7
+ 8000f92:	2000      	movs	r0, #0
+ 8000f94:	f7ff fa7e 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8000f98:	2200      	movs	r2, #0
+ 8000f9a:	2108      	movs	r1, #8
+ 8000f9c:	2000      	movs	r0, #0
+ 8000f9e:	f7ff fa79 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_LOW) ;
+ 8000fa2:	2200      	movs	r2, #0
+ 8000fa4:	2109      	movs	r1, #9
+ 8000fa6:	2000      	movs	r0, #0
+ 8000fa8:	f7ff fa74 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_LOW) ;
+ 8000fac:	2200      	movs	r2, #0
+ 8000fae:	210a      	movs	r1, #10
+ 8000fb0:	2000      	movs	r0, #0
+ 8000fb2:	f7ff fa6f 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000fb6:	e047      	b.n	8001048 <H_SSD_Void_DisplayNumber+0x664>
+		case 8:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8000fb8:	2201      	movs	r2, #1
+ 8000fba:	2104      	movs	r1, #4
+ 8000fbc:	2000      	movs	r0, #0
+ 8000fbe:	f7ff fa69 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 8000fc2:	2201      	movs	r2, #1
+ 8000fc4:	2105      	movs	r1, #5
+ 8000fc6:	2000      	movs	r0, #0
+ 8000fc8:	f7ff fa64 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8000fcc:	2201      	movs	r2, #1
+ 8000fce:	2106      	movs	r1, #6
+ 8000fd0:	2000      	movs	r0, #0
+ 8000fd2:	f7ff fa5f 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 8000fd6:	2201      	movs	r2, #1
+ 8000fd8:	2107      	movs	r1, #7
+ 8000fda:	2000      	movs	r0, #0
+ 8000fdc:	f7ff fa5a 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_HIGH) ;
+ 8000fe0:	2201      	movs	r2, #1
+ 8000fe2:	2108      	movs	r1, #8
+ 8000fe4:	2000      	movs	r0, #0
+ 8000fe6:	f7ff fa55 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8000fea:	2201      	movs	r2, #1
+ 8000fec:	2109      	movs	r1, #9
+ 8000fee:	2000      	movs	r0, #0
+ 8000ff0:	f7ff fa50 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 8000ff4:	2201      	movs	r2, #1
+ 8000ff6:	210a      	movs	r1, #10
+ 8000ff8:	2000      	movs	r0, #0
+ 8000ffa:	f7ff fa4b 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8000ffe:	e023      	b.n	8001048 <H_SSD_Void_DisplayNumber+0x664>
+		case 9:
+			M_DIO_void_setPinVal(SSD_LED_A_PORT, SSD_LED_A_PIN, DIO_HIGH) ;
+ 8001000:	2201      	movs	r2, #1
+ 8001002:	2104      	movs	r1, #4
+ 8001004:	2000      	movs	r0, #0
+ 8001006:	f7ff fa45 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_B_PORT, SSD_LED_B_PIN, DIO_HIGH) ;
+ 800100a:	2201      	movs	r2, #1
+ 800100c:	2105      	movs	r1, #5
+ 800100e:	2000      	movs	r0, #0
+ 8001010:	f7ff fa40 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_C_PORT, SSD_LED_C_PIN, DIO_HIGH) ;
+ 8001014:	2201      	movs	r2, #1
+ 8001016:	2106      	movs	r1, #6
+ 8001018:	2000      	movs	r0, #0
+ 800101a:	f7ff fa3b 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_D_PORT, SSD_LED_D_PIN, DIO_HIGH) ;
+ 800101e:	2201      	movs	r2, #1
+ 8001020:	2107      	movs	r1, #7
+ 8001022:	2000      	movs	r0, #0
+ 8001024:	f7ff fa36 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_E_PORT, SSD_LED_E_PIN, DIO_LOW) ;
+ 8001028:	2200      	movs	r2, #0
+ 800102a:	2108      	movs	r1, #8
+ 800102c:	2000      	movs	r0, #0
+ 800102e:	f7ff fa31 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_F_PORT, SSD_LED_F_PIN, DIO_HIGH) ;
+ 8001032:	2201      	movs	r2, #1
+ 8001034:	2109      	movs	r1, #9
+ 8001036:	2000      	movs	r0, #0
+ 8001038:	f7ff fa2c 	bl	8000494 <M_DIO_void_setPinVal>
+			M_DIO_void_setPinVal(SSD_LED_G_PORT, SSD_LED_G_PIN, DIO_HIGH) ;
+ 800103c:	2201      	movs	r2, #1
+ 800103e:	210a      	movs	r1, #10
+ 8001040:	2000      	movs	r0, #0
+ 8001042:	f7ff fa27 	bl	8000494 <M_DIO_void_setPinVal>
+			break ;
+ 8001046:	bf00      	nop
+		}
+		// enable DIG 2 (tens)
+		M_DIO_void_setPinVal(SSD_DIG_1_EN_PORT, SSD_DIG_1_EN_PIN, DIO_HIGH) ;
+ 8001048:	2201      	movs	r2, #1
+ 800104a:	210b      	movs	r1, #11
+ 800104c:	2000      	movs	r0, #0
+ 800104e:	f7ff fa21 	bl	8000494 <M_DIO_void_setPinVal>
+		M_DIO_void_setPinVal(SSD_DIG_2_EN_PORT, SSD_DIG_2_EN_PIN,DIO_LOW ) ;
+ 8001052:	2200      	movs	r2, #0
+ 8001054:	210c      	movs	r1, #12
+ 8001056:	2000      	movs	r0, #0
+ 8001058:	f7ff fa1c 	bl	8000494 <M_DIO_void_setPinVal>
+		_delay_ms(10) ;
+ 800105c:	200a      	movs	r0, #10
+ 800105e:	f7ff fc71 	bl	8000944 <_delay_ms>
+		// disable DIG 2 (tens)
+		M_DIO_void_setPinVal(SSD_DIG_2_EN_PORT, SSD_DIG_2_EN_PIN, DIO_HIGH) ;
+ 8001062:	2201      	movs	r2, #1
+ 8001064:	210c      	movs	r1, #12
+ 8001066:	2000      	movs	r0, #0
+ 8001068:	f7ff fa14 	bl	8000494 <M_DIO_void_setPinVal>
+	for(i=0;i<SSD_DISPLAY_TIME;i++)
+ 800106c:	68fb      	ldr	r3, [r7, #12]
+ 800106e:	3301      	adds	r3, #1
+ 8001070:	60fb      	str	r3, [r7, #12]
+ 8001072:	68fb      	ldr	r3, [r7, #12]
+ 8001074:	2b0c      	cmp	r3, #12
+ 8001076:	f67f acd2 	bls.w	8000a1e <H_SSD_Void_DisplayNumber+0x3a>
+ 800107a:	e000      	b.n	800107e <H_SSD_Void_DisplayNumber+0x69a>
+		return ;
+ 800107c:	bf00      	nop
+	}
+}
+ 800107e:	3710      	adds	r7, #16
+ 8001080:	46bd      	mov	sp, r7
+ 8001082:	bd80      	pop	{r7, pc}
+
+08001084 <H_SSD_Void_DisplayOFF>:
+
+void H_SSD_Void_DisplayOFF(void)
+{
+ 8001084:	b580      	push	{r7, lr}
+ 8001086:	af00      	add	r7, sp, #0
+	// disable DIG 1 (units)
+	M_DIO_void_setPinVal(SSD_DIG_1_EN_PORT, SSD_DIG_1_EN_PIN, DIO_HIGH) ;
+ 8001088:	2201      	movs	r2, #1
+ 800108a:	210b      	movs	r1, #11
+ 800108c:	2000      	movs	r0, #0
+ 800108e:	f7ff fa01 	bl	8000494 <M_DIO_void_setPinVal>
+	// disable DIG 2 (tens)
+	M_DIO_void_setPinVal(SSD_DIG_2_EN_PORT, SSD_DIG_2_EN_PIN, DIO_HIGH) ;
+ 8001092:	2201      	movs	r2, #1
+ 8001094:	210c      	movs	r1, #12
+ 8001096:	2000      	movs	r0, #0
+ 8001098:	f7ff f9fc 	bl	8000494 <M_DIO_void_setPinVal>
+}
+ 800109c:	bf00      	nop
+ 800109e:	bd80      	pop	{r7, pc}
+
+080010a0 <STK_voidInit>:
+#endif
+
+static void (*SysTick_CallBack) (void) = NULL;
+static u8	STK_u8ModeOfInterval;
+void	STK_voidInit(void)
+{
+ 80010a0:	b480      	push	{r7}
+ 80010a2:	af00      	add	r7, sp, #0
+		
+	#if		STK_CLK_SRC		==		STK_AHB_DIV_8
+				STK -> CTRL = 0x00000000 ;
+ 80010a4:	4b03      	ldr	r3, [pc, #12]	; (80010b4 <STK_voidInit+0x14>)
+ 80010a6:	2200      	movs	r2, #0
+ 80010a8:	601a      	str	r2, [r3, #0]
+				STK -> CTRL = 0x00000004 ;
+	#else	
+		#error	"Wrong choice of SysTick Prescaller"
+	#endif
+		
+}
+ 80010aa:	bf00      	nop
+ 80010ac:	46bd      	mov	sp, r7
+ 80010ae:	bc80      	pop	{r7}
+ 80010b0:	4770      	bx	lr
+ 80010b2:	bf00      	nop
+ 80010b4:	e000e010 	.word	0xe000e010
+
+080010b8 <STK_voidSetIntervalPeriodic>:
+	SET_BIT(STK -> CTRL , 1);
+	
+}
+
+void	STK_voidSetIntervalPeriodic(u32 Ticks,void (*Pf)(void))
+{
+ 80010b8:	b480      	push	{r7}
+ 80010ba:	b083      	sub	sp, #12
+ 80010bc:	af00      	add	r7, sp, #0
+ 80010be:	6078      	str	r0, [r7, #4]
+ 80010c0:	6039      	str	r1, [r7, #0]
+	/*		Load Ticks to Load Register		*/
+	STK -> LOAD	= Ticks;
+ 80010c2:	4a0d      	ldr	r2, [pc, #52]	; (80010f8 <STK_voidSetIntervalPeriodic+0x40>)
+ 80010c4:	687b      	ldr	r3, [r7, #4]
+ 80010c6:	6053      	str	r3, [r2, #4]
+	/*		Start Timer 					*/
+	SET_BIT(STK -> CTRL , 0);
+ 80010c8:	4b0b      	ldr	r3, [pc, #44]	; (80010f8 <STK_voidSetIntervalPeriodic+0x40>)
+ 80010ca:	681b      	ldr	r3, [r3, #0]
+ 80010cc:	4a0a      	ldr	r2, [pc, #40]	; (80010f8 <STK_voidSetIntervalPeriodic+0x40>)
+ 80010ce:	f043 0301 	orr.w	r3, r3, #1
+ 80010d2:	6013      	str	r3, [r2, #0]
+	/*		Save CallBack					*/
+	SysTick_CallBack = Pf;
+ 80010d4:	4a09      	ldr	r2, [pc, #36]	; (80010fc <STK_voidSetIntervalPeriodic+0x44>)
+ 80010d6:	683b      	ldr	r3, [r7, #0]
+ 80010d8:	6013      	str	r3, [r2, #0]
+	/*		Software Flage to indicate which callback will execute	*/
+	STK_u8ModeOfInterval = STK_PERIOD_INTERVAL;	
+ 80010da:	4b09      	ldr	r3, [pc, #36]	; (8001100 <STK_voidSetIntervalPeriodic+0x48>)
+ 80010dc:	2204      	movs	r2, #4
+ 80010de:	701a      	strb	r2, [r3, #0]
+	/*		SysTick Interrupt Enable PIE	*/
+	SET_BIT(STK -> CTRL , 1);
+ 80010e0:	4b05      	ldr	r3, [pc, #20]	; (80010f8 <STK_voidSetIntervalPeriodic+0x40>)
+ 80010e2:	681b      	ldr	r3, [r3, #0]
+ 80010e4:	4a04      	ldr	r2, [pc, #16]	; (80010f8 <STK_voidSetIntervalPeriodic+0x40>)
+ 80010e6:	f043 0302 	orr.w	r3, r3, #2
+ 80010ea:	6013      	str	r3, [r2, #0]
+	
+}
+ 80010ec:	bf00      	nop
+ 80010ee:	370c      	adds	r7, #12
+ 80010f0:	46bd      	mov	sp, r7
+ 80010f2:	bc80      	pop	{r7}
+ 80010f4:	4770      	bx	lr
+ 80010f6:	bf00      	nop
+ 80010f8:	e000e010 	.word	0xe000e010
+ 80010fc:	20000060 	.word	0x20000060
+ 8001100:	20000064 	.word	0x20000064
+
+08001104 <SysTick_Handler>:
+	Local_u32RemainingTime =  (STK -> VAL);
+	return Local_u32RemainingTime;
+}
+//Core Peripheral
+void	SysTick_Handler(void)
+{
+ 8001104:	b580      	push	{r7, lr}
+ 8001106:	b082      	sub	sp, #8
+ 8001108:	af00      	add	r7, sp, #0
+	u8 Local_u8Temp = 0;
+ 800110a:	2300      	movs	r3, #0
+ 800110c:	71fb      	strb	r3, [r7, #7]
+	if(STK_u8ModeOfInterval == STK_SINGLE_INTERVAL)
+ 800110e:	4b12      	ldr	r3, [pc, #72]	; (8001158 <SysTick_Handler+0x54>)
+ 8001110:	781b      	ldrb	r3, [r3, #0]
+ 8001112:	2b02      	cmp	r3, #2
+ 8001114:	d111      	bne.n	800113a <SysTick_Handler+0x36>
+	{
+		/*	1- Disable the Interrupt 	*/
+			CLR_BIT(STK -> CTRL , 1);
+ 8001116:	4b11      	ldr	r3, [pc, #68]	; (800115c <SysTick_Handler+0x58>)
+ 8001118:	681b      	ldr	r3, [r3, #0]
+ 800111a:	4a10      	ldr	r2, [pc, #64]	; (800115c <SysTick_Handler+0x58>)
+ 800111c:	f023 0302 	bic.w	r3, r3, #2
+ 8001120:	6013      	str	r3, [r2, #0]
+		/*	2- Stop the timer			*/
+			CLR_BIT(STK -> CTRL , 0);
+ 8001122:	4b0e      	ldr	r3, [pc, #56]	; (800115c <SysTick_Handler+0x58>)
+ 8001124:	681b      	ldr	r3, [r3, #0]
+ 8001126:	4a0d      	ldr	r2, [pc, #52]	; (800115c <SysTick_Handler+0x58>)
+ 8001128:	f023 0301 	bic.w	r3, r3, #1
+ 800112c:	6013      	str	r3, [r2, #0]
+			STK -> LOAD	= 0;
+ 800112e:	4b0b      	ldr	r3, [pc, #44]	; (800115c <SysTick_Handler+0x58>)
+ 8001130:	2200      	movs	r2, #0
+ 8001132:	605a      	str	r2, [r3, #4]
+			STK -> VAL	= 0;
+ 8001134:	4b09      	ldr	r3, [pc, #36]	; (800115c <SysTick_Handler+0x58>)
+ 8001136:	2200      	movs	r2, #0
+ 8001138:	609a      	str	r2, [r3, #8]
+	}
+	SysTick_CallBack();
+ 800113a:	4b09      	ldr	r3, [pc, #36]	; (8001160 <SysTick_Handler+0x5c>)
+ 800113c:	681b      	ldr	r3, [r3, #0]
+ 800113e:	4798      	blx	r3
+	/*	Clear Interrupt Flag by reading the Flag */
+	Local_u8Temp	=	GET_BIT(STK -> CTRL , 16);
+ 8001140:	4b06      	ldr	r3, [pc, #24]	; (800115c <SysTick_Handler+0x58>)
+ 8001142:	681b      	ldr	r3, [r3, #0]
+ 8001144:	0c1b      	lsrs	r3, r3, #16
+ 8001146:	b2db      	uxtb	r3, r3
+ 8001148:	f003 0301 	and.w	r3, r3, #1
+ 800114c:	71fb      	strb	r3, [r7, #7]
+}
+ 800114e:	bf00      	nop
+ 8001150:	3708      	adds	r7, #8
+ 8001152:	46bd      	mov	sp, r7
+ 8001154:	bd80      	pop	{r7, pc}
+ 8001156:	bf00      	nop
+ 8001158:	20000064 	.word	0x20000064
+ 800115c:	e000e010 	.word	0xe000e010
+ 8001160:	20000060 	.word	0x20000060
+
+08001164 <SwitchOnOff>:
+u8 flag_down = 0;
+u8 flag_up = 0;
+u16 x ;
+u16 y ;
+void SwitchOnOff(void)
+{
+ 8001164:	b480      	push	{r7}
+ 8001166:	af00      	add	r7, sp, #0
+	if( state == OFF_STATE )
+ 8001168:	4b0b      	ldr	r3, [pc, #44]	; (8001198 <SwitchOnOff+0x34>)
+ 800116a:	781b      	ldrb	r3, [r3, #0]
+ 800116c:	2b00      	cmp	r3, #0
+ 800116e:	d103      	bne.n	8001178 <SwitchOnOff+0x14>
+	{
+		state = NORMAL_MODE_STATE;
+ 8001170:	4b09      	ldr	r3, [pc, #36]	; (8001198 <SwitchOnOff+0x34>)
+ 8001172:	2201      	movs	r2, #1
+ 8001174:	701a      	strb	r2, [r3, #0]
+	}
+	else if( state == NORMAL_MODE_STATE || state == SETTING_MODE_STATE)
+	{
+		state = OFF_STATE ;
+	}
+}
+ 8001176:	e00a      	b.n	800118e <SwitchOnOff+0x2a>
+	else if( state == NORMAL_MODE_STATE || state == SETTING_MODE_STATE)
+ 8001178:	4b07      	ldr	r3, [pc, #28]	; (8001198 <SwitchOnOff+0x34>)
+ 800117a:	781b      	ldrb	r3, [r3, #0]
+ 800117c:	2b01      	cmp	r3, #1
+ 800117e:	d003      	beq.n	8001188 <SwitchOnOff+0x24>
+ 8001180:	4b05      	ldr	r3, [pc, #20]	; (8001198 <SwitchOnOff+0x34>)
+ 8001182:	781b      	ldrb	r3, [r3, #0]
+ 8001184:	2b02      	cmp	r3, #2
+ 8001186:	d102      	bne.n	800118e <SwitchOnOff+0x2a>
+		state = OFF_STATE ;
+ 8001188:	4b03      	ldr	r3, [pc, #12]	; (8001198 <SwitchOnOff+0x34>)
+ 800118a:	2200      	movs	r2, #0
+ 800118c:	701a      	strb	r2, [r3, #0]
+}
+ 800118e:	bf00      	nop
+ 8001190:	46bd      	mov	sp, r7
+ 8001192:	bc80      	pop	{r7}
+ 8001194:	4770      	bx	lr
+ 8001196:	bf00      	nop
+ 8001198:	20000065 	.word	0x20000065
+
+0800119c <TEMP_UP>:
+void TEMP_UP(void)
+{
+ 800119c:	b480      	push	{r7}
+ 800119e:	af00      	add	r7, sp, #0
+	if( state == NORMAL_MODE_STATE || state == SETTING_MODE_STATE)
+ 80011a0:	4b0b      	ldr	r3, [pc, #44]	; (80011d0 <TEMP_UP+0x34>)
+ 80011a2:	781b      	ldrb	r3, [r3, #0]
+ 80011a4:	2b01      	cmp	r3, #1
+ 80011a6:	d003      	beq.n	80011b0 <TEMP_UP+0x14>
+ 80011a8:	4b09      	ldr	r3, [pc, #36]	; (80011d0 <TEMP_UP+0x34>)
+ 80011aa:	781b      	ldrb	r3, [r3, #0]
+ 80011ac:	2b02      	cmp	r3, #2
+ 80011ae:	d102      	bne.n	80011b6 <TEMP_UP+0x1a>
+	{
+		state = SETTING_MODE_STATE ;
+ 80011b0:	4b07      	ldr	r3, [pc, #28]	; (80011d0 <TEMP_UP+0x34>)
+ 80011b2:	2202      	movs	r2, #2
+ 80011b4:	701a      	strb	r2, [r3, #0]
+	}
+	settingCounter = 0 ;
+ 80011b6:	4b07      	ldr	r3, [pc, #28]	; (80011d4 <TEMP_UP+0x38>)
+ 80011b8:	2200      	movs	r2, #0
+ 80011ba:	701a      	strb	r2, [r3, #0]
+	flag_up = 1 ;
+ 80011bc:	4b06      	ldr	r3, [pc, #24]	; (80011d8 <TEMP_UP+0x3c>)
+ 80011be:	2201      	movs	r2, #1
+ 80011c0:	701a      	strb	r2, [r3, #0]
+	flag_toggle = 1 ;
+ 80011c2:	4b06      	ldr	r3, [pc, #24]	; (80011dc <TEMP_UP+0x40>)
+ 80011c4:	2201      	movs	r2, #1
+ 80011c6:	701a      	strb	r2, [r3, #0]
+}
+ 80011c8:	bf00      	nop
+ 80011ca:	46bd      	mov	sp, r7
+ 80011cc:	bc80      	pop	{r7}
+ 80011ce:	4770      	bx	lr
+ 80011d0:	20000065 	.word	0x20000065
+ 80011d4:	20000068 	.word	0x20000068
+ 80011d8:	2000006b 	.word	0x2000006b
+ 80011dc:	20000069 	.word	0x20000069
+
+080011e0 <TEMP_DOWN>:
+
+void TEMP_DOWN(void)
+{
+ 80011e0:	b480      	push	{r7}
+ 80011e2:	af00      	add	r7, sp, #0
+	if( state == NORMAL_MODE_STATE || state == SETTING_MODE_STATE)
+ 80011e4:	4b0b      	ldr	r3, [pc, #44]	; (8001214 <TEMP_DOWN+0x34>)
+ 80011e6:	781b      	ldrb	r3, [r3, #0]
+ 80011e8:	2b01      	cmp	r3, #1
+ 80011ea:	d003      	beq.n	80011f4 <TEMP_DOWN+0x14>
+ 80011ec:	4b09      	ldr	r3, [pc, #36]	; (8001214 <TEMP_DOWN+0x34>)
+ 80011ee:	781b      	ldrb	r3, [r3, #0]
+ 80011f0:	2b02      	cmp	r3, #2
+ 80011f2:	d102      	bne.n	80011fa <TEMP_DOWN+0x1a>
+	{
+		state = SETTING_MODE_STATE ;
+ 80011f4:	4b07      	ldr	r3, [pc, #28]	; (8001214 <TEMP_DOWN+0x34>)
+ 80011f6:	2202      	movs	r2, #2
+ 80011f8:	701a      	strb	r2, [r3, #0]
+	}
+	settingCounter = 0 ;
+ 80011fa:	4b07      	ldr	r3, [pc, #28]	; (8001218 <TEMP_DOWN+0x38>)
+ 80011fc:	2200      	movs	r2, #0
+ 80011fe:	701a      	strb	r2, [r3, #0]
+	flag_down = 1 ;
+ 8001200:	4b06      	ldr	r3, [pc, #24]	; (800121c <TEMP_DOWN+0x3c>)
+ 8001202:	2201      	movs	r2, #1
+ 8001204:	701a      	strb	r2, [r3, #0]
+	flag_toggle = 1 ;
+ 8001206:	4b06      	ldr	r3, [pc, #24]	; (8001220 <TEMP_DOWN+0x40>)
+ 8001208:	2201      	movs	r2, #1
+ 800120a:	701a      	strb	r2, [r3, #0]
+}
+ 800120c:	bf00      	nop
+ 800120e:	46bd      	mov	sp, r7
+ 8001210:	bc80      	pop	{r7}
+ 8001212:	4770      	bx	lr
+ 8001214:	20000065 	.word	0x20000065
+ 8001218:	20000068 	.word	0x20000068
+ 800121c:	2000006a 	.word	0x2000006a
+ 8001220:	20000069 	.word	0x20000069
+
+08001224 <ACTION>:
+
+void ACTION(void)
+{
+ 8001224:	b480      	push	{r7}
+ 8001226:	af00      	add	r7, sp, #0
+	if( state == SETTING_MODE_STATE ||  state==NORMAL_MODE_STATE )
+ 8001228:	4b0f      	ldr	r3, [pc, #60]	; (8001268 <ACTION+0x44>)
+ 800122a:	781b      	ldrb	r3, [r3, #0]
+ 800122c:	2b02      	cmp	r3, #2
+ 800122e:	d003      	beq.n	8001238 <ACTION+0x14>
+ 8001230:	4b0d      	ldr	r3, [pc, #52]	; (8001268 <ACTION+0x44>)
+ 8001232:	781b      	ldrb	r3, [r3, #0]
+ 8001234:	2b01      	cmp	r3, #1
+ 8001236:	d113      	bne.n	8001260 <ACTION+0x3c>
+	{
+		settingCounter++ ;
+ 8001238:	4b0c      	ldr	r3, [pc, #48]	; (800126c <ACTION+0x48>)
+ 800123a:	781b      	ldrb	r3, [r3, #0]
+ 800123c:	3301      	adds	r3, #1
+ 800123e:	b2da      	uxtb	r2, r3
+ 8001240:	4b0a      	ldr	r3, [pc, #40]	; (800126c <ACTION+0x48>)
+ 8001242:	701a      	strb	r2, [r3, #0]
+
+		flag_toggle ^= 1 ;
+ 8001244:	4b0a      	ldr	r3, [pc, #40]	; (8001270 <ACTION+0x4c>)
+ 8001246:	781b      	ldrb	r3, [r3, #0]
+ 8001248:	f083 0301 	eor.w	r3, r3, #1
+ 800124c:	b2da      	uxtb	r2, r3
+ 800124e:	4b08      	ldr	r3, [pc, #32]	; (8001270 <ACTION+0x4c>)
+ 8001250:	701a      	strb	r2, [r3, #0]
+
+		if(settingCounter==10)
+ 8001252:	4b06      	ldr	r3, [pc, #24]	; (800126c <ACTION+0x48>)
+ 8001254:	781b      	ldrb	r3, [r3, #0]
+ 8001256:	2b0a      	cmp	r3, #10
+ 8001258:	d102      	bne.n	8001260 <ACTION+0x3c>
+		{
+			state = NORMAL_MODE_STATE ;
+ 800125a:	4b03      	ldr	r3, [pc, #12]	; (8001268 <ACTION+0x44>)
+ 800125c:	2201      	movs	r2, #1
+ 800125e:	701a      	strb	r2, [r3, #0]
+		}
+	}
+}
+ 8001260:	bf00      	nop
+ 8001262:	46bd      	mov	sp, r7
+ 8001264:	bc80      	pop	{r7}
+ 8001266:	4770      	bx	lr
+ 8001268:	20000065 	.word	0x20000065
+ 800126c:	20000068 	.word	0x20000068
+ 8001270:	20000069 	.word	0x20000069
+
+08001274 <main>:
+int main(void)
+{
+ 8001274:	b590      	push	{r4, r7, lr}
+ 8001276:	b08d      	sub	sp, #52	; 0x34
+ 8001278:	af00      	add	r7, sp, #0
+	u16 tmep_arr[10] = {0};
+ 800127a:	f107 0318 	add.w	r3, r7, #24
+ 800127e:	2200      	movs	r2, #0
+ 8001280:	601a      	str	r2, [r3, #0]
+ 8001282:	605a      	str	r2, [r3, #4]
+ 8001284:	609a      	str	r2, [r3, #8]
+ 8001286:	60da      	str	r2, [r3, #12]
+ 8001288:	611a      	str	r2, [r3, #16]
+	u16 tmep_sum = 0;
+ 800128a:	2300      	movs	r3, #0
+ 800128c:	85fb      	strh	r3, [r7, #46]	; 0x2e
+	u8 i = 0;
+ 800128e:	2300      	movs	r3, #0
+ 8001290:	f887 302d 	strb.w	r3, [r7, #45]	; 0x2d
+	EXTI_PinConfig_t Local_EXTI0 = {EXTI_u8_PORTA,PIN1,EXTI_u8_FALLING_EDGE,SwitchOnOff};
+ 8001294:	4a96      	ldr	r2, [pc, #600]	; (80014f0 <main+0x27c>)
+ 8001296:	f107 0310 	add.w	r3, r7, #16
+ 800129a:	e892 0003 	ldmia.w	r2, {r0, r1}
+ 800129e:	e883 0003 	stmia.w	r3, {r0, r1}
+	EXTI_PinConfig_t Local_EXTI1 = {EXTI_u8_PORTA,PIN2,EXTI_u8_FALLING_EDGE,TEMP_DOWN};
+ 80012a2:	4a94      	ldr	r2, [pc, #592]	; (80014f4 <main+0x280>)
+ 80012a4:	f107 0308 	add.w	r3, r7, #8
+ 80012a8:	e892 0003 	ldmia.w	r2, {r0, r1}
+ 80012ac:	e883 0003 	stmia.w	r3, {r0, r1}
+	EXTI_PinConfig_t Local_EXTI2 = {EXTI_u8_PORTA,PIN3,EXTI_u8_FALLING_EDGE,TEMP_UP};
+ 80012b0:	4a91      	ldr	r2, [pc, #580]	; (80014f8 <main+0x284>)
+ 80012b2:	463b      	mov	r3, r7
+ 80012b4:	e892 0003 	ldmia.w	r2, {r0, r1}
+ 80012b8:	e883 0003 	stmia.w	r3, {r0, r1}
+	/* RCC Initialize */
+	MRCC_voidSysClkInit();
+ 80012bc:	f7ff fac0 	bl	8000840 <MRCC_voidSysClkInit>
+	/* GPIOA Enable Clock */
+	MRCC_voidEnablePerClk(RCC_APB2,DIO_A);
+ 80012c0:	2102      	movs	r1, #2
+ 80012c2:	2002      	movs	r0, #2
+ 80012c4:	f7ff fad8 	bl	8000878 <MRCC_voidEnablePerClk>
+	/* GPIOC Enable Clock */
+	MRCC_voidEnablePerClk(RCC_APB2,DIO_C);
+ 80012c8:	2104      	movs	r1, #4
+ 80012ca:	2002      	movs	r0, #2
+ 80012cc:	f7ff fad4 	bl	8000878 <MRCC_voidEnablePerClk>
+	MRCC_voidEnablePerClk(RCC_APB2,0);
+ 80012d0:	2100      	movs	r1, #0
+ 80012d2:	2002      	movs	r0, #2
+ 80012d4:	f7ff fad0 	bl	8000878 <MRCC_voidEnablePerClk>
+	/* Init SSD */
+	H_SSD_Void_init();
+ 80012d8:	f7ff fb4d 	bl	8000976 <H_SSD_Void_init>
+	/* Init HEATER & COOLER */
+	H_HEATER_void_init();
+ 80012dc:	f7ff fa70 	bl	80007c0 <H_HEATER_void_init>
+	H_COOLER_void_init();
+ 80012e0:	f7fe ffe8 	bl	80002b4 <H_COOLER_void_init>
+	/* Init STK */
+	STK_voidInit();
+ 80012e4:	f7ff fedc 	bl	80010a0 <STK_voidInit>
+	STK_voidSetIntervalPeriodic(500000, ACTION) ;
+ 80012e8:	4984      	ldr	r1, [pc, #528]	; (80014fc <main+0x288>)
+ 80012ea:	4885      	ldr	r0, [pc, #532]	; (8001500 <main+0x28c>)
+ 80012ec:	f7ff fee4 	bl	80010b8 <STK_voidSetIntervalPeriodic>
+	// Set ADC Prescaler
+	MRCC_voidSetADCPre(RCC_ADC_PRE_2);
+ 80012f0:	2000      	movs	r0, #0
+ 80012f2:	f7ff fb03 	bl	80008fc <MRCC_voidSetADCPre>
+	// Enable Per Clk "RCC" -> ADC -> 9
+	MRCC_voidEnablePerClk(RCC_APB2,9);
+ 80012f6:	2109      	movs	r1, #9
+ 80012f8:	2002      	movs	r0, #2
+ 80012fa:	f7ff fabd 	bl	8000878 <MRCC_voidEnablePerClk>
+	// Set Direction for ADC channel_0 as IN_ANALOG
+	M_DIO_void_setPinDir(PORTA, PIN0, IN_ANALOG);
+ 80012fe:	2200      	movs	r2, #0
+ 8001300:	2100      	movs	r1, #0
+ 8001302:	2000      	movs	r0, #0
+ 8001304:	f7fe fff2 	bl	80002ec <M_DIO_void_setPinDir>
+	/* Init ADC */
+	ADC_void_init();
+ 8001308:	f7fe ff4c 	bl	80001a4 <ADC_void_init>
+
+	/* IO Pins Initialization */
+	M_DIO_void_setPinDir(PORTA,PIN1,IN_PULL_UP_DOWN); /* A0 Input Floating        */
+ 800130c:	2208      	movs	r2, #8
+ 800130e:	2101      	movs	r1, #1
+ 8001310:	2000      	movs	r0, #0
+ 8001312:	f7fe ffeb 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinVal(PORTA,PIN1,DIO_HIGH);
+ 8001316:	2201      	movs	r2, #1
+ 8001318:	2101      	movs	r1, #1
+ 800131a:	2000      	movs	r0, #0
+ 800131c:	f7ff f8ba 	bl	8000494 <M_DIO_void_setPinVal>
+	M_DIO_void_setPinDir(PORTA,PIN2,IN_PULL_UP_DOWN); /* A1 Input Floating        */
+ 8001320:	2208      	movs	r2, #8
+ 8001322:	2102      	movs	r1, #2
+ 8001324:	2000      	movs	r0, #0
+ 8001326:	f7fe ffe1 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinVal(PORTA,PIN2,DIO_HIGH);
+ 800132a:	2201      	movs	r2, #1
+ 800132c:	2102      	movs	r1, #2
+ 800132e:	2000      	movs	r0, #0
+ 8001330:	f7ff f8b0 	bl	8000494 <M_DIO_void_setPinVal>
+	M_DIO_void_setPinDir(PORTA,PIN3,IN_PULL_UP_DOWN); /* A2 Input Floating        */
+ 8001334:	2208      	movs	r2, #8
+ 8001336:	2103      	movs	r1, #3
+ 8001338:	2000      	movs	r0, #0
+ 800133a:	f7fe ffd7 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinVal(PORTA,PIN3,DIO_HIGH);
+ 800133e:	2201      	movs	r2, #1
+ 8001340:	2103      	movs	r1, #3
+ 8001342:	2000      	movs	r0, #0
+ 8001344:	f7ff f8a6 	bl	8000494 <M_DIO_void_setPinVal>
+
+	M_DIO_void_setPinDir(PORTC,PIN14,OUT_2MHZ_PP); /* C14 Output        */
+ 8001348:	2202      	movs	r2, #2
+ 800134a:	210e      	movs	r1, #14
+ 800134c:	2002      	movs	r0, #2
+ 800134e:	f7fe ffcd 	bl	80002ec <M_DIO_void_setPinDir>
+	M_DIO_void_setPinDir(PORTC,PIN15,OUT_2MHZ_PP); /* C15 Output        */
+ 8001352:	2202      	movs	r2, #2
+ 8001354:	210f      	movs	r1, #15
+ 8001356:	2002      	movs	r0, #2
+ 8001358:	f7fe ffc8 	bl	80002ec <M_DIO_void_setPinDir>
+//	M_DIO_void_setPinVal(PORTC,PIN15,DIO_HIGH);
+
+
+
+	/* EXTI Initializtion */
+	EXTI_u8PinInit(&Local_EXTI0);
+ 800135c:	f107 0310 	add.w	r3, r7, #16
+ 8001360:	4618      	mov	r0, r3
+ 8001362:	f7ff f911 	bl	8000588 <EXTI_u8PinInit>
+	EXTI_u8PinInit(&Local_EXTI1);
+ 8001366:	f107 0308 	add.w	r3, r7, #8
+ 800136a:	4618      	mov	r0, r3
+ 800136c:	f7ff f90c 	bl	8000588 <EXTI_u8PinInit>
+	EXTI_u8PinInit(&Local_EXTI2);
+ 8001370:	463b      	mov	r3, r7
+ 8001372:	4618      	mov	r0, r3
+ 8001374:	f7ff f908 	bl	8000588 <EXTI_u8PinInit>
+	EXTI_u8IntEnable(&Local_EXTI0);
+ 8001378:	f107 0310 	add.w	r3, r7, #16
+ 800137c:	4618      	mov	r0, r3
+ 800137e:	f7ff f9a7 	bl	80006d0 <EXTI_u8IntEnable>
+	EXTI_u8IntEnable(&Local_EXTI1);
+ 8001382:	f107 0308 	add.w	r3, r7, #8
+ 8001386:	4618      	mov	r0, r3
+ 8001388:	f7ff f9a2 	bl	80006d0 <EXTI_u8IntEnable>
+	EXTI_u8IntEnable(&Local_EXTI2);
+ 800138c:	463b      	mov	r3, r7
+ 800138e:	4618      	mov	r0, r3
+ 8001390:	f7ff f99e 	bl	80006d0 <EXTI_u8IntEnable>
+
+	/* Enable EXTI0 from NVIC */
+	NVIC_u8EnableInterrupt(7); /* EXTI0 */
+ 8001394:	2007      	movs	r0, #7
+ 8001396:	f7ff fa2f 	bl	80007f8 <NVIC_u8EnableInterrupt>
+	NVIC_u8EnableInterrupt(8); /* EXTI1 */
+ 800139a:	2008      	movs	r0, #8
+ 800139c:	f7ff fa2c 	bl	80007f8 <NVIC_u8EnableInterrupt>
+	NVIC_u8EnableInterrupt(9); /* EXTI2 */
+ 80013a0:	2009      	movs	r0, #9
+ 80013a2:	f7ff fa29 	bl	80007f8 <NVIC_u8EnableInterrupt>
+
+
+	/* Loop forever */
+	while(1)
+	{
+		switch(state)
+ 80013a6:	4b57      	ldr	r3, [pc, #348]	; (8001504 <main+0x290>)
+ 80013a8:	781b      	ldrb	r3, [r3, #0]
+ 80013aa:	2b02      	cmp	r3, #2
+ 80013ac:	d066      	beq.n	800147c <main+0x208>
+ 80013ae:	2b02      	cmp	r3, #2
+ 80013b0:	f300 8098 	bgt.w	80014e4 <main+0x270>
+ 80013b4:	2b00      	cmp	r3, #0
+ 80013b6:	d002      	beq.n	80013be <main+0x14a>
+ 80013b8:	2b01      	cmp	r3, #1
+ 80013ba:	d007      	beq.n	80013cc <main+0x158>
+			{
+				TEMP_Ref_value -= 5 ;
+				flag_down = 0 ;
+			}
+			break;
+		default: break;
+ 80013bc:	e092      	b.n	80014e4 <main+0x270>
+			H_HEATER_void_stop();
+ 80013be:	f7ff fa11 	bl	80007e4 <H_HEATER_void_stop>
+			H_COOLER_void_stop();
+ 80013c2:	f7fe ff89 	bl	80002d8 <H_COOLER_void_stop>
+			H_SSD_Void_DisplayOFF();
+ 80013c6:	f7ff fe5d 	bl	8001084 <H_SSD_Void_DisplayOFF>
+			break;
+ 80013ca:	e090      	b.n	80014ee <main+0x27a>
+			x = ADC_u16_read(CHANNEL_0);
+ 80013cc:	2000      	movs	r0, #0
+ 80013ce:	f7fe ff2b 	bl	8000228 <ADC_u16_read>
+ 80013d2:	4603      	mov	r3, r0
+ 80013d4:	461a      	mov	r2, r3
+ 80013d6:	4b4c      	ldr	r3, [pc, #304]	; (8001508 <main+0x294>)
+ 80013d8:	801a      	strh	r2, [r3, #0]
+			tmep_arr[i] = ADC_u16_read(CHANNEL_0);
+ 80013da:	f897 402d 	ldrb.w	r4, [r7, #45]	; 0x2d
+ 80013de:	2000      	movs	r0, #0
+ 80013e0:	f7fe ff22 	bl	8000228 <ADC_u16_read>
+ 80013e4:	4603      	mov	r3, r0
+ 80013e6:	461a      	mov	r2, r3
+ 80013e8:	0063      	lsls	r3, r4, #1
+ 80013ea:	3330      	adds	r3, #48	; 0x30
+ 80013ec:	443b      	add	r3, r7
+ 80013ee:	f823 2c18 	strh.w	r2, [r3, #-24]
+			tmep_sum += tmep_arr[i];
+ 80013f2:	f897 302d 	ldrb.w	r3, [r7, #45]	; 0x2d
+ 80013f6:	005b      	lsls	r3, r3, #1
+ 80013f8:	3330      	adds	r3, #48	; 0x30
+ 80013fa:	443b      	add	r3, r7
+ 80013fc:	f833 2c18 	ldrh.w	r2, [r3, #-24]
+ 8001400:	8dfb      	ldrh	r3, [r7, #46]	; 0x2e
+ 8001402:	4413      	add	r3, r2
+ 8001404:	85fb      	strh	r3, [r7, #46]	; 0x2e
+			if(i == 9)
+ 8001406:	f897 302d 	ldrb.w	r3, [r7, #45]	; 0x2d
+ 800140a:	2b09      	cmp	r3, #9
+ 800140c:	d113      	bne.n	8001436 <main+0x1c2>
+				TEMP_Current_value = (((tmep_sum / 10) * (u32)330) / 4096);
+ 800140e:	8dfb      	ldrh	r3, [r7, #46]	; 0x2e
+ 8001410:	4a3e      	ldr	r2, [pc, #248]	; (800150c <main+0x298>)
+ 8001412:	fba2 2303 	umull	r2, r3, r2, r3
+ 8001416:	08db      	lsrs	r3, r3, #3
+ 8001418:	b29b      	uxth	r3, r3
+ 800141a:	461a      	mov	r2, r3
+ 800141c:	f44f 73a5 	mov.w	r3, #330	; 0x14a
+ 8001420:	fb02 f303 	mul.w	r3, r2, r3
+ 8001424:	0b1b      	lsrs	r3, r3, #12
+ 8001426:	b29a      	uxth	r2, r3
+ 8001428:	4b39      	ldr	r3, [pc, #228]	; (8001510 <main+0x29c>)
+ 800142a:	801a      	strh	r2, [r3, #0]
+				tmep_sum = 0;
+ 800142c:	2300      	movs	r3, #0
+ 800142e:	85fb      	strh	r3, [r7, #46]	; 0x2e
+				i = 0;
+ 8001430:	2300      	movs	r3, #0
+ 8001432:	f887 302d 	strb.w	r3, [r7, #45]	; 0x2d
+			i++;
+ 8001436:	f897 302d 	ldrb.w	r3, [r7, #45]	; 0x2d
+ 800143a:	3301      	adds	r3, #1
+ 800143c:	f887 302d 	strb.w	r3, [r7, #45]	; 0x2d
+			H_SSD_Void_DisplayNumber(TEMP_Current_value);
+ 8001440:	4b33      	ldr	r3, [pc, #204]	; (8001510 <main+0x29c>)
+ 8001442:	881b      	ldrh	r3, [r3, #0]
+ 8001444:	b2db      	uxtb	r3, r3
+ 8001446:	4618      	mov	r0, r3
+ 8001448:	f7ff facc 	bl	80009e4 <H_SSD_Void_DisplayNumber>
+			if(TEMP_Current_value < TEMP_Ref_value)
+ 800144c:	4b31      	ldr	r3, [pc, #196]	; (8001514 <main+0x2a0>)
+ 800144e:	781b      	ldrb	r3, [r3, #0]
+ 8001450:	b29a      	uxth	r2, r3
+ 8001452:	4b2f      	ldr	r3, [pc, #188]	; (8001510 <main+0x29c>)
+ 8001454:	881b      	ldrh	r3, [r3, #0]
+ 8001456:	429a      	cmp	r2, r3
+ 8001458:	d904      	bls.n	8001464 <main+0x1f0>
+				H_HEATER_void_start();
+ 800145a:	f7ff f9ba 	bl	80007d2 <H_HEATER_void_start>
+				H_COOLER_void_stop();
+ 800145e:	f7fe ff3b 	bl	80002d8 <H_COOLER_void_stop>
+			break;
+ 8001462:	e041      	b.n	80014e8 <main+0x274>
+			else if(TEMP_Current_value > TEMP_Ref_value)
+ 8001464:	4b2b      	ldr	r3, [pc, #172]	; (8001514 <main+0x2a0>)
+ 8001466:	781b      	ldrb	r3, [r3, #0]
+ 8001468:	b29a      	uxth	r2, r3
+ 800146a:	4b29      	ldr	r3, [pc, #164]	; (8001510 <main+0x29c>)
+ 800146c:	881b      	ldrh	r3, [r3, #0]
+ 800146e:	429a      	cmp	r2, r3
+ 8001470:	d23a      	bcs.n	80014e8 <main+0x274>
+				H_HEATER_void_stop();
+ 8001472:	f7ff f9b7 	bl	80007e4 <H_HEATER_void_stop>
+				H_COOLER_void_start();
+ 8001476:	f7fe ff26 	bl	80002c6 <H_COOLER_void_start>
+			break;
+ 800147a:	e035      	b.n	80014e8 <main+0x274>
+			H_HEATER_void_stop();
+ 800147c:	f7ff f9b2 	bl	80007e4 <H_HEATER_void_stop>
+			H_COOLER_void_stop();
+ 8001480:	f7fe ff2a 	bl	80002d8 <H_COOLER_void_stop>
+			if(flag_toggle == 1)
+ 8001484:	4b24      	ldr	r3, [pc, #144]	; (8001518 <main+0x2a4>)
+ 8001486:	781b      	ldrb	r3, [r3, #0]
+ 8001488:	2b01      	cmp	r3, #1
+ 800148a:	d105      	bne.n	8001498 <main+0x224>
+				H_SSD_Void_DisplayNumber(TEMP_Ref_value);
+ 800148c:	4b21      	ldr	r3, [pc, #132]	; (8001514 <main+0x2a0>)
+ 800148e:	781b      	ldrb	r3, [r3, #0]
+ 8001490:	4618      	mov	r0, r3
+ 8001492:	f7ff faa7 	bl	80009e4 <H_SSD_Void_DisplayNumber>
+ 8001496:	e001      	b.n	800149c <main+0x228>
+				H_SSD_Void_DisplayOFF() ;
+ 8001498:	f7ff fdf4 	bl	8001084 <H_SSD_Void_DisplayOFF>
+			if(flag_up == 1 && TEMP_Ref_value < 75 )
+ 800149c:	4b1f      	ldr	r3, [pc, #124]	; (800151c <main+0x2a8>)
+ 800149e:	781b      	ldrb	r3, [r3, #0]
+ 80014a0:	2b01      	cmp	r3, #1
+ 80014a2:	d10d      	bne.n	80014c0 <main+0x24c>
+ 80014a4:	4b1b      	ldr	r3, [pc, #108]	; (8001514 <main+0x2a0>)
+ 80014a6:	781b      	ldrb	r3, [r3, #0]
+ 80014a8:	2b4a      	cmp	r3, #74	; 0x4a
+ 80014aa:	d809      	bhi.n	80014c0 <main+0x24c>
+				TEMP_Ref_value += 5 ;
+ 80014ac:	4b19      	ldr	r3, [pc, #100]	; (8001514 <main+0x2a0>)
+ 80014ae:	781b      	ldrb	r3, [r3, #0]
+ 80014b0:	3305      	adds	r3, #5
+ 80014b2:	b2da      	uxtb	r2, r3
+ 80014b4:	4b17      	ldr	r3, [pc, #92]	; (8001514 <main+0x2a0>)
+ 80014b6:	701a      	strb	r2, [r3, #0]
+				flag_up = 0 ;
+ 80014b8:	4b18      	ldr	r3, [pc, #96]	; (800151c <main+0x2a8>)
+ 80014ba:	2200      	movs	r2, #0
+ 80014bc:	701a      	strb	r2, [r3, #0]
+			break;
+ 80014be:	e015      	b.n	80014ec <main+0x278>
+			else if(flag_down == 1 && TEMP_Ref_value > 35 )
+ 80014c0:	4b17      	ldr	r3, [pc, #92]	; (8001520 <main+0x2ac>)
+ 80014c2:	781b      	ldrb	r3, [r3, #0]
+ 80014c4:	2b01      	cmp	r3, #1
+ 80014c6:	d111      	bne.n	80014ec <main+0x278>
+ 80014c8:	4b12      	ldr	r3, [pc, #72]	; (8001514 <main+0x2a0>)
+ 80014ca:	781b      	ldrb	r3, [r3, #0]
+ 80014cc:	2b23      	cmp	r3, #35	; 0x23
+ 80014ce:	d90d      	bls.n	80014ec <main+0x278>
+				TEMP_Ref_value -= 5 ;
+ 80014d0:	4b10      	ldr	r3, [pc, #64]	; (8001514 <main+0x2a0>)
+ 80014d2:	781b      	ldrb	r3, [r3, #0]
+ 80014d4:	3b05      	subs	r3, #5
+ 80014d6:	b2da      	uxtb	r2, r3
+ 80014d8:	4b0e      	ldr	r3, [pc, #56]	; (8001514 <main+0x2a0>)
+ 80014da:	701a      	strb	r2, [r3, #0]
+				flag_down = 0 ;
+ 80014dc:	4b10      	ldr	r3, [pc, #64]	; (8001520 <main+0x2ac>)
+ 80014de:	2200      	movs	r2, #0
+ 80014e0:	701a      	strb	r2, [r3, #0]
+			break;
+ 80014e2:	e003      	b.n	80014ec <main+0x278>
+		default: break;
+ 80014e4:	bf00      	nop
+ 80014e6:	e75e      	b.n	80013a6 <main+0x132>
+			break;
+ 80014e8:	bf00      	nop
+ 80014ea:	e75c      	b.n	80013a6 <main+0x132>
+			break;
+ 80014ec:	bf00      	nop
+		switch(state)
+ 80014ee:	e75a      	b.n	80013a6 <main+0x132>
+ 80014f0:	080015d8 	.word	0x080015d8
+ 80014f4:	080015e0 	.word	0x080015e0
+ 80014f8:	080015e8 	.word	0x080015e8
+ 80014fc:	08001225 	.word	0x08001225
+ 8001500:	0007a120 	.word	0x0007a120
+ 8001504:	20000065 	.word	0x20000065
+ 8001508:	2000006c 	.word	0x2000006c
+ 800150c:	cccccccd 	.word	0xcccccccd
+ 8001510:	20000066 	.word	0x20000066
+ 8001514:	20000000 	.word	0x20000000
+ 8001518:	20000069 	.word	0x20000069
+ 800151c:	2000006b 	.word	0x2000006b
+ 8001520:	2000006a 	.word	0x2000006a
+
+08001524 <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 8001524:	480d      	ldr	r0, [pc, #52]	; (800155c <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 8001526:	4685      	mov	sp, r0
+/* Call the clock system initialization function.*/
+  bl  SystemInit
+ 8001528:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 800152c:	480c      	ldr	r0, [pc, #48]	; (8001560 <LoopForever+0x6>)
+  ldr r1, =_edata
+ 800152e:	490d      	ldr	r1, [pc, #52]	; (8001564 <LoopForever+0xa>)
+  ldr r2, =_sidata
+ 8001530:	4a0d      	ldr	r2, [pc, #52]	; (8001568 <LoopForever+0xe>)
+  movs r3, #0
+ 8001532:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 8001534:	e002      	b.n	800153c <LoopCopyDataInit>
+
+08001536 <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 8001536:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 8001538:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 800153a:	3304      	adds	r3, #4
+
+0800153c <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 800153c:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 800153e:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 8001540:	d3f9      	bcc.n	8001536 <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 8001542:	4a0a      	ldr	r2, [pc, #40]	; (800156c <LoopForever+0x12>)
+  ldr r4, =_ebss
+ 8001544:	4c0a      	ldr	r4, [pc, #40]	; (8001570 <LoopForever+0x16>)
+  movs r3, #0
+ 8001546:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 8001548:	e001      	b.n	800154e <LoopFillZerobss>
+
+0800154a <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 800154a:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 800154c:	3204      	adds	r2, #4
+
+0800154e <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 800154e:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 8001550:	d3fb      	bcc.n	800154a <FillZerobss>
+
+/* Call static constructors */
+  bl __libc_init_array
+ 8001552:	f000 f811 	bl	8001578 <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
+ 8001556:	f7ff fe8d 	bl	8001274 <main>
+
+0800155a <LoopForever>:
+
+LoopForever:
+  b LoopForever
+ 800155a:	e7fe      	b.n	800155a <LoopForever>
+  ldr   r0, =_estack
+ 800155c:	20005000 	.word	0x20005000
+  ldr r0, =_sdata
+ 8001560:	20000000 	.word	0x20000000
+  ldr r1, =_edata
+ 8001564:	20000004 	.word	0x20000004
+  ldr r2, =_sidata
+ 8001568:	080015f8 	.word	0x080015f8
+  ldr r2, =_sbss
+ 800156c:	20000004 	.word	0x20000004
+  ldr r4, =_ebss
+ 8001570:	20000070 	.word	0x20000070
+
+08001574 <ADC1_2_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 8001574:	e7fe      	b.n	8001574 <ADC1_2_IRQHandler>
+	...
+
+08001578 <__libc_init_array>:
+ 8001578:	b570      	push	{r4, r5, r6, lr}
+ 800157a:	2600      	movs	r6, #0
+ 800157c:	4d0c      	ldr	r5, [pc, #48]	; (80015b0 <__libc_init_array+0x38>)
+ 800157e:	4c0d      	ldr	r4, [pc, #52]	; (80015b4 <__libc_init_array+0x3c>)
+ 8001580:	1b64      	subs	r4, r4, r5
+ 8001582:	10a4      	asrs	r4, r4, #2
+ 8001584:	42a6      	cmp	r6, r4
+ 8001586:	d109      	bne.n	800159c <__libc_init_array+0x24>
+ 8001588:	f000 f81a 	bl	80015c0 <_init>
+ 800158c:	2600      	movs	r6, #0
+ 800158e:	4d0a      	ldr	r5, [pc, #40]	; (80015b8 <__libc_init_array+0x40>)
+ 8001590:	4c0a      	ldr	r4, [pc, #40]	; (80015bc <__libc_init_array+0x44>)
+ 8001592:	1b64      	subs	r4, r4, r5
+ 8001594:	10a4      	asrs	r4, r4, #2
+ 8001596:	42a6      	cmp	r6, r4
+ 8001598:	d105      	bne.n	80015a6 <__libc_init_array+0x2e>
+ 800159a:	bd70      	pop	{r4, r5, r6, pc}
+ 800159c:	f855 3b04 	ldr.w	r3, [r5], #4
+ 80015a0:	4798      	blx	r3
+ 80015a2:	3601      	adds	r6, #1
+ 80015a4:	e7ee      	b.n	8001584 <__libc_init_array+0xc>
+ 80015a6:	f855 3b04 	ldr.w	r3, [r5], #4
+ 80015aa:	4798      	blx	r3
+ 80015ac:	3601      	adds	r6, #1
+ 80015ae:	e7f2      	b.n	8001596 <__libc_init_array+0x1e>
+ 80015b0:	080015f0 	.word	0x080015f0
+ 80015b4:	080015f0 	.word	0x080015f0
+ 80015b8:	080015f0 	.word	0x080015f0
+ 80015bc:	080015f4 	.word	0x080015f4
+
+080015c0 <_init>:
+ 80015c0:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 80015c2:	bf00      	nop
+ 80015c4:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 80015c6:	bc08      	pop	{r3}
+ 80015c8:	469e      	mov	lr, r3
+ 80015ca:	4770      	bx	lr
+
+080015cc <_fini>:
+ 80015cc:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 80015ce:	bf00      	nop
+ 80015d0:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 80015d2:	bc08      	pop	{r3}
+ 80015d4:	469e      	mov	lr, r3
+ 80015d6:	4770      	bx	lr

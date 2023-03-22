@@ -1,0 +1,7 @@
+../Src/EXTI_program.c:17:4:EXTI_u8PinInit	24	static
+../Src/EXTI_program.c:59:4:EXTI_u8IntEnable	24	static
+../Src/EXTI_program.c:74:4:EXTI_u8IntDisable	24	static
+../Src/EXTI_program.c:90:6:EXTI0_IRQHandler	8	static
+../Src/EXTI_program.c:100:6:EXTI1_IRQHandler	8	static
+../Src/EXTI_program.c:109:6:EXTI2_IRQHandler	8	static
+../Src/EXTI_program.c:118:6:EXTI3_IRQHandler	8	static

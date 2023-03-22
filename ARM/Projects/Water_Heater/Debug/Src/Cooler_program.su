@@ -1,0 +1,3 @@
+../Src/Cooler_program.c:11:6:H_COOLER_void_init	8	static
+../Src/Cooler_program.c:16:6:H_COOLER_void_start	8	static
+../Src/Cooler_program.c:21:6:H_COOLER_void_stop	8	static

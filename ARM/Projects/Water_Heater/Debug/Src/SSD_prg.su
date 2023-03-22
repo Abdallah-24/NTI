@@ -1,0 +1,4 @@
+../Src/SSD_prg.c:15:13:_delay_ms	24	static,ignoring_inline_asm
+../Src/SSD_prg.c:23:6:H_SSD_Void_init	8	static
+../Src/SSD_prg.c:42:6:H_SSD_Void_DisplayNumber	24	static
+../Src/SSD_prg.c:260:6:H_SSD_Void_DisplayOFF	8	static
