@@ -1,0 +1,3 @@
+../Src/DIO_program.c:8:6:M_DIO_void_setPinDir	16	static
+../Src/DIO_program.c:52:6:M_DIO_void_setPinVal	16	static
+../Src/DIO_program.c:79:6:M_DIO_void_getPinVal	16	static
