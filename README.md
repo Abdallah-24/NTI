@@ -1,3 +1,1 @@
-# NTI 
-# ARM
-# STM32f103c8
+# NTI_ARM_STM32f103c8
